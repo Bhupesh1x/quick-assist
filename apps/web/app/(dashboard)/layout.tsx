@@ -1,3 +1,4 @@
+import { OrgGuard } from "@/features/auth/components/OrgGuard";
 import { AuthGuard } from "@/features/auth/components/AuthGuard";
 
 interface Props {
@@ -5,7 +6,11 @@ interface Props {
 }
 
 function layout({ children }: Props) {
-  return <AuthGuard>{children}</AuthGuard>;
+  return (
+    <AuthGuard>
+      <OrgGuard>{children}</OrgGuard>
+    </AuthGuard>
+  );
 }
 
 export default layout;
