@@ -1,0 +1,9 @@
+function FilesPage() {
+  return (
+    <div>
+      <h1>FilesPage</h1>
+    </div>
+  );
+}
+
+export default FilesPage;
