@@ -125,3 +125,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+.group[data-collapsible-icon] .user-button-username {
+  display: none;
+}

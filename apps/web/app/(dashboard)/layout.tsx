@@ -1,16 +1,11 @@
-import { OrgGuard } from "@/features/auth/components/OrgGuard";
-import { AuthGuard } from "@/features/auth/components/AuthGuard";
+import { DashboardLayout } from "@/features/dashboard/layouts/DashboardLayout";
 
 interface Props {
   children: React.ReactNode;
 }
 
 function layout({ children }: Props) {
-  return (
-    <AuthGuard>
-      <OrgGuard>{children}</OrgGuard>
-    </AuthGuard>
-  );
+  return <DashboardLayout>{children}</DashboardLayout>;
 }
 
 export default layout;
