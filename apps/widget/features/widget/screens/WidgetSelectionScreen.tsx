@@ -6,6 +6,7 @@ import { ChevronRightIcon, MessageSquareTextIcon } from "lucide-react";
 import {
   screenAtom,
   errorMessageAtom,
+  conversationIdAtom,
   organizationIdAtom,
   contactSessionIdFamily,
 } from "../atoms/WidgetAtom";
@@ -19,6 +20,7 @@ export function WidgetSelectionScreen() {
 
   const setScreen = useSetAtom(screenAtom);
   const setErrorMessage = useSetAtom(errorMessageAtom);
+  const setConversationId = useSetAtom(conversationIdAtom);
 
   const organizationId = useAtomValue(organizationIdAtom);
   const sessionId = useAtomValue(contactSessionIdFamily(organizationId || ""));
@@ -38,11 +40,12 @@ export function WidgetSelectionScreen() {
 
     setIsPending(true);
     try {
-      await createConversation({
+      const conversationId = await createConversation({
         organizationId,
         sessionId,
       });
 
+      setConversationId(conversationId);
       setScreen("chat");
     } catch {
       setScreen("auth");
