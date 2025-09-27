@@ -1,23 +1,31 @@
 "use client";
 
-import { WidgetFooter } from "../components/WidgetFooter";
-import { WidgetHeader } from "../components/WidgetHeader";
+import { useAtomValue } from "jotai";
+
+import { screenAtom } from "../atoms/WidgetAtom";
+import { WidgetAuthScreen } from "../screens/WidgetAuthScreen";
 
 interface Props {
   organizationId: string;
 }
 
 export function WidgetView({ organizationId }: Props) {
+  const screen = useAtomValue(screenAtom);
+
+  const screenComponents = {
+    error: <p>TODO: Error</p>,
+    loading: <p>TODO: Loading</p>,
+    auth: <WidgetAuthScreen />,
+    voice: <p>TODO: Voice</p>,
+    inbox: <p>TODO: Inbox</p>,
+    selection: <p>TODO: selection</p>,
+    chat: <p>TODO: chat</p>,
+    contact: <p>TODO: Contact</p>,
+  };
+
   return (
     <main className="min-h-screen w-full h-full border bg-muted rounded-xl flex flex-col overflow-hidden">
-      <WidgetHeader>
-        <div className="space-y-2 px-2 py-4">
-          <p className="text-3xl tracking-wide">Hi there! 👋</p>
-          <p className="text-lg">How can we help you today?</p>
-        </div>
-      </WidgetHeader>
-      <section className="flex-1">Widget View: {organizationId}</section>
-      <WidgetFooter />
+      {screenComponents[screen]}
     </main>
   );
 }

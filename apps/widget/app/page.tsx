@@ -1,4 +1,4 @@
-import { WidgetAuthScreen } from "@/features/widget/screens/WidgetAuthScreen";
+import { WidgetView } from "@/features/widget/views/WidgetView";
 
 interface Props {
   searchParams: Promise<{
@@ -9,7 +9,7 @@ interface Props {
 async function Page({ searchParams }: Props) {
   const { organizationId } = await searchParams;
 
-  return <WidgetAuthScreen />;
+  return <WidgetView organizationId={organizationId} />;
 }
 
 export default Page;

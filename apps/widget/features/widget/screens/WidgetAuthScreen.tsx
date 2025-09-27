@@ -63,7 +63,7 @@ export function WidgetAuthScreen() {
   }
 
   return (
-    <main className="min-h-screen w-full h-full border bg-muted rounded-xl flex flex-col overflow-hidden">
+    <>
       <WidgetHeader>
         <div className="space-y-2 px-2 py-4">
           <p className="text-3xl tracking-wide">Hi there! 👋</p>
@@ -121,6 +121,6 @@ export function WidgetAuthScreen() {
         </Form>
       </section>
       <WidgetFooter />
-    </main>
+    </>
   );
 }
