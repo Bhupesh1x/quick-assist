@@ -3,9 +3,13 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { useMutation } from "convex/react";
+import { useAtomValue, useSetAtom } from "jotai";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { WidgetFooter } from "../components/WidgetFooter";
+import {
+  contactSessionIdFamily,
+  organizationIdAtom,
+} from "../atoms/WidgetAtom";
 import { WidgetHeader } from "../components/WidgetHeader";
 
 import {
@@ -28,6 +32,11 @@ const formSchema = z.object({
 
 export function WidgetAuthScreen() {
   const createContactSession = useMutation(api.public.contactSessions.create);
+
+  const organizationId = useAtomValue(organizationIdAtom);
+  const setContactSessionId = useSetAtom(
+    contactSessionIdFamily(organizationId || "")
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -59,7 +68,7 @@ export function WidgetAuthScreen() {
       metadata,
     });
 
-    console.log({ contactSessionId });
+    setContactSessionId(contactSessionId);
   }
 
   return (
