@@ -120,7 +120,6 @@ export function WidgetAuthScreen() {
           </form>
         </Form>
       </section>
-      <WidgetFooter />
     </>
   );
 }
