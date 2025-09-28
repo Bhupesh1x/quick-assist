@@ -49,7 +49,17 @@ export const getOne = query({
     const conversation = await ctx.db.get(args.conversationId);
 
     if (!conversation) {
-      return null;
+      throw new ConvexError({
+        code: "Not found",
+        message: "Conversation not found",
+      });
+    }
+
+    if (conversation?.contactSessionId !== session?._id) {
+      throw new ConvexError({
+        code: "Unauthorized",
+        message: "Incorrect session",
+      });
     }
 
     return {
