@@ -23,9 +23,7 @@ export function WidgetFooter() {
         className="h-14 flex-1 rounded-none"
         onClick={() => {}}
       >
-        <InboxIcon
-          className={`size-5 ${screen === "inbox" ? "text-primary" : ""} `}
-        />
+        <InboxIcon className={`size-5`} />
       </Button>
     </footer>
   );
