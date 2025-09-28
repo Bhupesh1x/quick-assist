@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   contactSessionIdFamily,
   organizationIdAtom,
+  screenAtom,
 } from "../atoms/WidgetAtom";
 import { WidgetHeader } from "../components/WidgetHeader";
 
@@ -34,6 +35,8 @@ export function WidgetAuthScreen() {
   const createContactSession = useMutation(api.public.contactSessions.create);
 
   const organizationId = useAtomValue(organizationIdAtom);
+
+  const setScreen = useSetAtom(screenAtom);
   const setContactSessionId = useSetAtom(
     contactSessionIdFamily(organizationId || "")
   );
@@ -69,6 +72,7 @@ export function WidgetAuthScreen() {
     });
 
     setContactSessionId(contactSessionId);
+    setScreen("selection");
   }
 
   return (

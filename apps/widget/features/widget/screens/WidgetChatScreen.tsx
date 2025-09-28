@@ -35,6 +35,8 @@ import { api } from "@workspace/backend/_generated/api";
 import { Button } from "@workspace/ui/components/button";
 import { Form, FormField } from "@workspace/ui/components/form";
 import { AIResponse } from "@workspace/ui/components/ai/response";
+import { useInfiniteScroll } from "@workspace/ui/hooks/useInfiniteScroll";
+import { InfiniteScrollTrigger } from "@workspace/ui/components/InfiniteScrollTrigger";
 
 const formSchema = z.object({
   message: z.string().trim().min(3, "Message is required"),
@@ -95,6 +97,13 @@ export function WidgetChatScreen() {
     });
   }
 
+  const { canLoadMore, topElementRef, isLoadingMore, handleLoadMore } =
+    useInfiniteScroll({
+      loadMore: messages.loadMore,
+      status: messages.status,
+      loadSize: 10,
+    });
+
   return (
     <>
       <WidgetHeader className="w-full flex items-center justify-between px-2 py-4">
@@ -110,6 +119,12 @@ export function WidgetChatScreen() {
       </WidgetHeader>
       <AIConversation>
         <AIConversationContent>
+          <InfiniteScrollTrigger
+            canLoadMore={canLoadMore}
+            isLoadingMore={isLoadingMore}
+            onLoadMore={handleLoadMore}
+            ref={topElementRef}
+          />
           {toUIMessages(messages?.results ?? [])?.map((message) => (
             <AIMessage
               key={message?.id}
