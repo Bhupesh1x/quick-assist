@@ -7,6 +7,7 @@ import { screenAtom } from "../atoms/WidgetAtom";
 import { WidgetChatScreen } from "../screens/WidgetChatScreen";
 import { WidgetAuthScreen } from "../screens/WidgetAuthScreen";
 import { WidgetErrorScreen } from "../screens/WidgetErrorScreen";
+import { WidgetInboxScreen } from "../screens/WidgetInboxScreen";
 import { WidgetLoadingScreen } from "../screens/WidgetLoadingScreen";
 import { WidgetSelectionScreen } from "../screens/WidgetSelectionScreen";
 
@@ -22,7 +23,7 @@ export function WidgetView({ organizationId }: Props) {
     error: <WidgetErrorScreen />,
     auth: <WidgetAuthScreen />,
     voice: <p>TODO: Voice</p>,
-    inbox: <p>TODO: Inbox</p>,
+    inbox: <WidgetInboxScreen />,
     selection: <WidgetSelectionScreen />,
     chat: <WidgetChatScreen />,
     contact: <p>TODO: Contact</p>,

@@ -11,6 +11,7 @@ import {
   contactSessionIdFamily,
 } from "../atoms/WidgetAtom";
 import { WidgetHeader } from "../components/WidgetHeader";
+import { WidgetFooter } from "../components/WidgetFooter";
 
 import { api } from "@workspace/backend/_generated/api";
 import { Button } from "@workspace/ui/components/button";
@@ -76,6 +77,7 @@ export function WidgetSelectionScreen() {
           <ChevronRightIcon />
         </Button>
       </div>
+      <WidgetFooter />
     </>
   );
 }
