@@ -36,6 +36,7 @@ import { Button } from "@workspace/ui/components/button";
 import { Form, FormField } from "@workspace/ui/components/form";
 import { AIResponse } from "@workspace/ui/components/ai/response";
 import { useInfiniteScroll } from "@workspace/ui/hooks/useInfiniteScroll";
+import { DicebarAvatar } from "@workspace/ui/components/ai/dicebar-avatar";
 import { InfiniteScrollTrigger } from "@workspace/ui/components/InfiniteScrollTrigger";
 
 const formSchema = z.object({
@@ -133,6 +134,13 @@ export function WidgetChatScreen() {
               <AIMessageContent>
                 <AIResponse>{message?.content || ""}</AIResponse>
               </AIMessageContent>
+              {message?.role === "assistant" ? (
+                <DicebarAvatar
+                  imageUrl="/logo.svg"
+                  seed="assistant"
+                  size={32}
+                />
+              ) : null}
             </AIMessage>
           ))}
         </AIConversationContent>
