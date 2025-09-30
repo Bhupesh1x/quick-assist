@@ -1,5 +1,6 @@
 import { ConvexError, v } from "convex/values";
-import { saveMessage } from "@convex-dev/agent";
+import { paginationOptsValidator } from "convex/server";
+import { MessageDoc, saveMessage } from "@convex-dev/agent";
 
 import { components } from "../_generated/api";
 import { mutation, query } from "../_generated/server";
@@ -79,6 +80,60 @@ export const getOne = query({
       _id: conversation._id,
       status: conversation.status,
       threadId: conversation.threadId,
+    };
+  },
+});
+
+export const getMany = query({
+  args: {
+    contactSessionId: v.id("contactSessions"),
+    paginationOpts: paginationOptsValidator,
+  },
+  handler: async (ctx, args) => {
+    const contactSession = await ctx.db.get(args.contactSessionId);
+
+    if (!contactSession || contactSession?.expiresAt < Date.now()) {
+      throw new ConvexError({
+        code: "UNAUTHORIZED",
+        message: "Invalid session",
+      });
+    }
+
+    const conversations = await ctx.db
+      .query("conversations")
+      .withIndex("by_contactSession_id", (q) =>
+        q.eq("contactSessionId", args.contactSessionId)
+      )
+      .order("desc")
+      .paginate(args.paginationOpts);
+
+    const conversationWithLastMessage = await Promise.all(
+      conversations?.page?.map(async (conversation) => {
+        let lastMessage: MessageDoc | null = null;
+
+        const messages = await supportAgent.listMessages(ctx, {
+          threadId: conversation?.threadId,
+          paginationOpts: { cursor: null, numItems: 1 },
+        });
+
+        if (messages?.page?.length > 0) {
+          lastMessage = messages?.page?.[0] ?? null;
+        }
+
+        return {
+          _id: conversation?._id,
+          _creationTime: conversation?._creationTime,
+          organizationId: conversation?.organizationId,
+          status: conversation?.status,
+          threadId: conversation?.threadId,
+          lastMessage,
+        };
+      })
+    );
+
+    return {
+      ...conversations,
+      page: conversationWithLastMessage,
     };
   },
 });
