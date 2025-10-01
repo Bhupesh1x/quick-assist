@@ -2,6 +2,7 @@ import { ArrowRightIcon, ArrowUpIcon, CheckIcon } from "lucide-react";
 
 interface Props {
   status: "resolved" | "escalated" | "unresolved";
+  className?: string;
 }
 
 const statusConfig = {
@@ -19,15 +20,15 @@ const statusConfig = {
   },
 } as const;
 
-export function ConversationStatusIcon({ status }: Props) {
+export function ConversationStatusIcon({ status, className = "" }: Props) {
   const config = statusConfig[status];
   const Icon = config?.icon;
 
   return (
     <div
-      className={`flex size-5 flex-shrink-0 items-center justify-center rounded-full ${config?.bgColor}`}
+      className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full p-0.5 ${config?.bgColor} ${className}`}
     >
-      <Icon className="size-4 stroke-3 text-white" />
+      <Icon className="h-full w-full stroke-3 text-white" />
     </div>
   );
 }

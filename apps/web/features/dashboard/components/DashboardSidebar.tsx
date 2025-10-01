@@ -1,29 +1,30 @@
 "use client";
 
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarRail,
-} from "@workspace/ui/components/sidebar";
-import {
-  CreditCardIcon,
-  InboxIcon,
-  LayoutDashboardIcon,
-  LibraryBigIcon,
   Mic,
+  InboxIcon,
   PaletteIcon,
+  CreditCardIcon,
+  LibraryBigIcon,
+  LayoutDashboardIcon,
 } from "lucide-react";
+import {
+  Sidebar,
+  SidebarRail,
+  SidebarMenu,
+  SidebarGroup,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarContent,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarGroupLabel,
+  SidebarGroupContent,
+} from "@workspace/ui/components/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
+
 import { cn } from "@workspace/ui/lib/utils";
 
 const customerSupportItems = [
@@ -87,10 +88,10 @@ export function DashboardSidebar() {
                 skipInvitationScreen
                 appearance={{
                   elements: {
-                    rootBox: "w-full! h-8!",
-                    avatarBox: "size-4! rounded-sm!",
+                    rootBox: "w-full! h-10!",
+                    avatarBox: "size-8! rounded-sm!",
                     organizationSwitcherTrigger:
-                      "w-full! justify-start! group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2!",
+                      "w-full! justify-start! group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2!",
                     organizationPreview:
                       "group-data-[collapsible=icon]:justify-center! gap-2!",
                     organizationPreviewTextContainer:
@@ -195,14 +196,14 @@ export function DashboardSidebar() {
               showName
               appearance={{
                 elements: {
-                  rootBox: "w-full! h-8!",
+                  rootBox: "w-full! h-10!",
                   userButtonTrigger:
-                    "w-full! p-2! hover:bg-sidebar-accent! hover:text-sidebar-accent-foreground! group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-2!",
+                    "w-full! p-2! hover:bg-sidebar-accent! hover:text-sidebar-accent-foreground! group-data-[collapsible=icon]:size-10! group-data-[collapsible=icon]:p-2!",
                   userButtonBox:
                     "w-full! flex-row-reverse! justify-end! gap-2! group-data-[collapsible=icon]:justify-center! text-sidebar-foreground!",
                   userButtonOuterIdentifier:
                     "group-data-[collapsible=icon]:hidden! pl-0!",
-                  avatarBox: "size-4!",
+                  avatarBox: "size-8!",
                 },
               }}
             />
