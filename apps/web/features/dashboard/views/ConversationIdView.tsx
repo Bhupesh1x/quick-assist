@@ -1,0 +1,152 @@
+"use client";
+
+import z from "zod";
+import { useForm } from "react-hook-form";
+import { useMutation, useQuery } from "convex/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { MoreHorizontalIcon, Wand2Icon } from "lucide-react";
+import { toUIMessages, useThreadMessages } from "@convex-dev/agent/react";
+
+import {
+  AIInput,
+  AIInputTools,
+  AIInputButton,
+  AIInputSubmit,
+  AIInputToolbar,
+  AIInputTextarea,
+} from "@workspace/ui/components/ai/input";
+import {
+  AIMessage,
+  AIMessageContent,
+} from "@workspace/ui/components/ai/message";
+import {
+  AIConversation,
+  AIConversationContent,
+} from "@workspace/ui/components/ai/conversation";
+import { api } from "@workspace/backend/_generated/api";
+import { Button } from "@workspace/ui/components/button";
+import { Id } from "@workspace/backend/_generated/dataModel";
+import { Form, FormField } from "@workspace/ui/components/form";
+import { DicebarAvatar } from "@workspace/ui/components/ai/dicebar-avatar";
+
+interface Props {
+  conversationId: Id<"conversations">;
+}
+
+const formSchema = z.object({
+  message: z.string().trim().min(1, "Message is required"),
+});
+
+export function ConversationIdView({ conversationId }: Props) {
+  const conversation = useQuery(
+    api.private.conversations.getOne,
+    conversationId ? { conversationId } : "skip"
+  );
+
+  const messages = useThreadMessages(
+    api.private.messages.getMany,
+    conversation?.threadId ? { threadId: conversation?.threadId } : "skip",
+    {
+      initialNumItems: 10,
+    }
+  );
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      message: "",
+    },
+  });
+
+  const create = useMutation(api.private.messages.create);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      await create({
+        conversationId,
+        prompt: values.message,
+      });
+
+      form.reset();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  return (
+    <div>
+      <header className="bg-background p-2 border-b flex items-center justify-between w-full">
+        <Button variant="outline">
+          <MoreHorizontalIcon />
+        </Button>
+      </header>
+
+      <main className="h-[calc(100vh-160px)] overflow-auto">
+        <AIConversation>
+          <AIConversationContent>
+            {toUIMessages(messages?.results ?? [])?.map((message) => (
+              <AIMessage
+                key={message?.id}
+                // Reverse here because we are looking from "operator" perspective here
+                from={message?.role === "user" ? "assistant" : "user"}
+              >
+                <AIMessageContent>{message?.content || ""}</AIMessageContent>
+                {message?.role === "user" ? (
+                  <DicebarAvatar
+                    seed={conversation?.contactSession?._id || "user"}
+                    size={32}
+                  />
+                ) : null}
+              </AIMessage>
+            ))}
+          </AIConversationContent>
+        </AIConversation>
+      </main>
+      <Form {...form}>
+        <AIInput onSubmit={form.handleSubmit(onSubmit)}>
+          <FormField
+            control={form.control}
+            name="message"
+            render={({ field }) => (
+              <AIInputTextarea
+                value={field.value}
+                onChange={field.onChange}
+                disabled={
+                  conversation?.status === "resolved" ||
+                  form.formState.isSubmitting
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    form.handleSubmit(onSubmit)();
+                  }
+                }}
+                placeholder={
+                  conversation?.status === "resolved"
+                    ? "This conversation has been resolved"
+                    : "Type your response as a operator..."
+                }
+              />
+            )}
+          />
+          <AIInputToolbar>
+            <AIInputTools>
+              <AIInputButton>
+                <Wand2Icon />
+                Enhance
+              </AIInputButton>
+            </AIInputTools>
+            <AIInputSubmit
+              disabled={
+                conversation?.status === "resolved" ||
+                form.formState?.isSubmitting ||
+                !form.formState?.isValid
+              }
+              status="ready"
+              type="submit"
+            />
+          </AIInputToolbar>
+        </AIInput>
+      </Form>
+    </div>
+  );
+}
