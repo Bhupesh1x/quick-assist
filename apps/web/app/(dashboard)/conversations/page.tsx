@@ -1,9 +1,7 @@
+import { ConversationsView } from "@/features/dashboard/views/ConversationsView";
+
 function ConversationsPage() {
-  return (
-    <div>
-      <h1>ConversationsPage</h1>
-    </div>
-  );
+  return <ConversationsView />;
 }
 
 export default ConversationsPage;

@@ -1,3 +1,4 @@
+import { Provider } from "jotai";
 import { cookies } from "next/headers";
 import { SidebarProvider } from "@workspace/ui/components/sidebar";
 
@@ -18,10 +19,12 @@ export async function DashboardLayout({ children }: Props) {
   return (
     <AuthGuard>
       <OrgGuard>
-        <SidebarProvider defaultOpen={defaultOpen}>
-          <DashboardSidebar />
-          <main className="flex flex-col flex-1">{children}</main>
-        </SidebarProvider>
+        <Provider>
+          <SidebarProvider defaultOpen={defaultOpen}>
+            <DashboardSidebar />
+            <main className="flex flex-col flex-1">{children}</main>
+          </SidebarProvider>
+        </Provider>
       </OrgGuard>
     </AuthGuard>
   );
