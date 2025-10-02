@@ -1,6 +1,7 @@
 "use client";
 
 import z from "zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "convex/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +30,9 @@ import { Id } from "@workspace/backend/_generated/dataModel";
 import { Form, FormField } from "@workspace/ui/components/form";
 import { DicebarAvatar } from "@workspace/ui/components/ai/dicebar-avatar";
 
+import { getNewConversationStatus } from "../lib";
+import { ConversationStatusButton } from "../components/ConversationStatusButton";
+
 interface Props {
   conversationId: Id<"conversations">;
 }
@@ -38,6 +42,8 @@ const formSchema = z.object({
 });
 
 export function ConversationIdView({ conversationId }: Props) {
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+
   const conversation = useQuery(
     api.private.conversations.getOne,
     conversationId ? { conversationId } : "skip"
@@ -72,12 +78,43 @@ export function ConversationIdView({ conversationId }: Props) {
     }
   }
 
+  const updateConversationStatus = useMutation(
+    api.private.conversations.updateStatus
+  );
+
+  async function onUpdate() {
+    if (!conversation) return;
+
+    const newStatus = getNewConversationStatus(conversation?.status);
+
+    if (!newStatus) return;
+
+    setIsUpdatingStatus(true);
+    try {
+      await updateConversationStatus({
+        conversationId,
+        status: newStatus,
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  }
+
   return (
     <div>
       <header className="bg-background p-2 border-b flex items-center justify-between w-full">
         <Button variant="outline">
           <MoreHorizontalIcon />
         </Button>
+        {!!conversation && (
+          <ConversationStatusButton
+            onClick={onUpdate}
+            status={conversation?.status}
+            disabled={isUpdatingStatus}
+          />
+        )}
       </header>
 
       <main className="h-[calc(100vh-160px)] overflow-auto">
@@ -130,7 +167,12 @@ export function ConversationIdView({ conversationId }: Props) {
           />
           <AIInputToolbar>
             <AIInputTools>
-              <AIInputButton>
+              <AIInputButton
+                disabled={
+                  conversation?.status === "resolved" ||
+                  form.formState.isSubmitting
+                }
+              >
                 <Wand2Icon />
                 Enhance
               </AIInputButton>
