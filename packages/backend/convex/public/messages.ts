@@ -5,6 +5,8 @@ import { internal } from "../_generated/api";
 import { action, query } from "../_generated/server";
 
 import { supportAgent } from "../system/ai/agents/supportAgent";
+import { escalateConversation } from "../system/ai/tools/escalateConversation";
+import { resolveConversation } from "../system/ai/tools/resolveConversation";
 
 export const create = action({
   args: {
@@ -50,7 +52,13 @@ export const create = action({
       {
         threadId: args.threadId,
       },
-      { prompt: args.prompt }
+      {
+        prompt: args.prompt,
+        tools: {
+          escalateConversation,
+          resolveConversation,
+        },
+      }
     );
   },
 });
