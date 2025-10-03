@@ -1,3 +1,4 @@
+import { generateText } from "ai";
 import { ConvexError, v } from "convex/values";
 import { paginationOptsValidator } from "convex/server";
 
@@ -6,6 +7,7 @@ import { action, mutation, query } from "../_generated/server";
 
 import { supportAgent } from "../system/ai/agents/supportAgent";
 import { saveMessage } from "@convex-dev/agent";
+import { google } from "@ai-sdk/google";
 
 export const create = mutation({
   args: {
@@ -100,5 +102,47 @@ export const getMany = query({
     });
 
     return paginatedItems;
+  },
+});
+
+export const enhance = action({
+  args: {
+    prompt: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new ConvexError({
+        code: "UNAUTHORIZED",
+        message: "Invalid session",
+      });
+    }
+
+    const orgId = identity?.orgId as string;
+
+    if (!orgId) {
+      throw new ConvexError({
+        code: "UNAUTHORIZED",
+        message: "Organization not found",
+      });
+    }
+
+    const response = await generateText({
+      model: google("gemini-2.0-flash-lite"),
+      messages: [
+        {
+          role: "system",
+          content:
+            "Enhance the operator's message to be more professional, clear and helpful while maintaining their intent and key information",
+        },
+        {
+          role: "user",
+          content: args.prompt,
+        },
+      ],
+    });
+
+    return response?.text;
   },
 });
