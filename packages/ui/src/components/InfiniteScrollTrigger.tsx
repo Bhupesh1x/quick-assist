@@ -30,7 +30,7 @@ export function InfiniteScrollTrigger({
   return (
     <div className={`flex justify-center w-full py-2 ${className}`} ref={ref}>
       <button
-        className="hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 outline-none"
+        className="hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 outline-none p-2"
         disabled={!canLoadMore || isLoadingMore}
         onClick={onLoadMore}
       >

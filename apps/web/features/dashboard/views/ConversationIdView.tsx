@@ -28,7 +28,9 @@ import { api } from "@workspace/backend/_generated/api";
 import { Button } from "@workspace/ui/components/button";
 import { Id } from "@workspace/backend/_generated/dataModel";
 import { Form, FormField } from "@workspace/ui/components/form";
+import { useInfiniteScroll } from "@workspace/ui/hooks/useInfiniteScroll";
 import { DicebarAvatar } from "@workspace/ui/components/ai/dicebar-avatar";
+import { InfiniteScrollTrigger } from "@workspace/ui/components/InfiniteScrollTrigger";
 
 import { getNewConversationStatus } from "../lib";
 import { ConversationStatusButton } from "../components/ConversationStatusButton";
@@ -102,6 +104,13 @@ export function ConversationIdView({ conversationId }: Props) {
     }
   }
 
+  const { canLoadMore, topElementRef, isLoadingMore, handleLoadMore } =
+    useInfiniteScroll({
+      loadMore: messages.loadMore,
+      status: messages.status,
+      loadSize: 10,
+    });
+
   return (
     <div>
       <header className="bg-background p-2 border-b flex items-center justify-between w-full">
@@ -120,6 +129,12 @@ export function ConversationIdView({ conversationId }: Props) {
       <main className="h-[calc(100vh-160px)] overflow-auto">
         <AIConversation>
           <AIConversationContent>
+            <InfiniteScrollTrigger
+              canLoadMore={canLoadMore}
+              isLoadingMore={isLoadingMore}
+              onLoadMore={handleLoadMore}
+              ref={topElementRef}
+            />
             {toUIMessages(messages?.results ?? [])?.map((message) => (
               <AIMessage
                 key={message?.id}
