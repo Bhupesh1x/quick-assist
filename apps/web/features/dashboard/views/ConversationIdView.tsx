@@ -3,7 +3,7 @@
 import z from "zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery } from "convex/react";
+import { useAction, useMutation, useQuery } from "convex/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MoreHorizontalIcon, Wand2Icon } from "lucide-react";
 import { toUIMessages, useThreadMessages } from "@convex-dev/agent/react";
@@ -111,6 +111,25 @@ export function ConversationIdView({ conversationId }: Props) {
       loadSize: 10,
     });
 
+  const [isEnhancing, setIsEnhancing] = useState(false);
+
+  const enhancePrompt = useAction(api.private.messages.enhance);
+
+  async function onEnhance() {
+    const message = form.getValues("message");
+
+    setIsEnhancing(true);
+    try {
+      const response = await enhancePrompt({ prompt: message });
+
+      form.setValue("message", response);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsEnhancing(false);
+    }
+  }
+
   return (
     <div>
       <header className="bg-background p-2 border-b flex items-center justify-between w-full">
@@ -164,7 +183,8 @@ export function ConversationIdView({ conversationId }: Props) {
                 onChange={field.onChange}
                 disabled={
                   conversation?.status === "resolved" ||
-                  form.formState.isSubmitting
+                  form.formState.isSubmitting ||
+                  isEnhancing
                 }
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
@@ -185,8 +205,11 @@ export function ConversationIdView({ conversationId }: Props) {
               <AIInputButton
                 disabled={
                   conversation?.status === "resolved" ||
-                  form.formState.isSubmitting
+                  form.formState.isSubmitting ||
+                  !form.formState.isValid ||
+                  isEnhancing
                 }
+                onClick={onEnhance}
               >
                 <Wand2Icon />
                 Enhance
@@ -196,7 +219,8 @@ export function ConversationIdView({ conversationId }: Props) {
               disabled={
                 conversation?.status === "resolved" ||
                 form.formState?.isSubmitting ||
-                !form.formState?.isValid
+                !form.formState?.isValid ||
+                isEnhancing
               }
               status="ready"
               type="submit"
