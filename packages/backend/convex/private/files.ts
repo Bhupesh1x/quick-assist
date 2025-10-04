@@ -1,4 +1,5 @@
 import {
+  vEntryId,
   guessMimeTypeFromContents,
   contentHashFromArrayBuffer,
   guessMimeTypeFromExtension,
@@ -6,7 +7,8 @@ import {
 import { v, ConvexError } from "convex/values";
 
 import { rag } from "../system/ai/rag";
-import { action } from "../_generated/server";
+import { Id } from "../_generated/dataModel";
+import { action, mutation } from "../_generated/server";
 
 import { extractTextContent } from "../lib/extractTextContent";
 
@@ -84,5 +86,67 @@ export const create = action({
       url: ctx.storage.getUrl(storageId),
       entryId,
     };
+  },
+});
+
+export const deleteFile = mutation({
+  args: {
+    entryId: vEntryId,
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new ConvexError({
+        code: "UNAUTHORIZED",
+        message: "Invalid session",
+      });
+    }
+
+    const orgId = identity?.orgId as string;
+
+    if (!orgId) {
+      throw new ConvexError({
+        code: "UNAUTHORIZED",
+        message: "Organization id is required",
+      });
+    }
+
+    const namespace = await rag.getNamespace(ctx, {
+      namespace: orgId,
+    });
+
+    if (!namespace) {
+      throw new ConvexError({
+        code: "UNAUTHORIZED",
+        message: "Invalid namespace",
+      });
+    }
+
+    const entry = await rag.getEntry(ctx, {
+      entryId: args.entryId,
+    });
+
+    if (!entry) {
+      throw new ConvexError({
+        code: "NOT_FOUND",
+        message: "Entry not found",
+      });
+    }
+
+    if (entry?.metadata?.uploadedBy !== orgId) {
+      throw new ConvexError({
+        code: "BAD_REQUEST",
+        message: "Invalid organization id",
+      });
+    }
+
+    if (entry?.metadata?.storageId) {
+      await ctx.storage.delete(entry?.metadata?.storageId as Id<"_storage">);
+    }
+
+    await rag.deleteAsync(ctx, {
+      entryId: args.entryId,
+    });
   },
 });
