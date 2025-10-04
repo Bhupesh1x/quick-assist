@@ -25,6 +25,7 @@ import {
   SelectTrigger,
 } from "@workspace/ui/components/select";
 import { api } from "@workspace/backend/_generated/api";
+import { Skeleton } from "@workspace/ui/components/skeleton";
 import { Doc } from "@workspace/backend/_generated/dataModel";
 import { useInfiniteScroll } from "@workspace/ui/hooks/useInfiniteScroll";
 import { DicebarAvatar } from "@workspace/ui/components/ai/dicebar-avatar";
@@ -103,7 +104,7 @@ export function ConversationPanel() {
       <div className="flex flex-col h-[calc(100vh-53px)] overflow-y-auto scroll-container">
         {conversations?.isLoading
           ? Array.from({ length: 5 })?.map((_, index) => (
-              <div className={`h-[89px] border-b`} key={index} />
+              <ConversationPanelLoading key={index} />
             ))
           : null}
         {conversations?.results?.map((conversation) => {
@@ -175,6 +176,38 @@ export function ConversationPanel() {
           onLoadMore={handleLoadMore}
           ref={topElementRef}
         />
+      </div>
+    </div>
+  );
+}
+
+export function ConversationPanelLoading() {
+  return (
+    <div className="relative p-4 py-5 border-b hover:bg-accent hover:text-sidebar-foreground">
+      <div className="flex items-start gap-2">
+        <DicebarAvatar
+          seed={"user-avatar"}
+          size={40}
+          className="!hidden md:!inline-block"
+        />
+
+        <div className="space-y-2 w-full">
+          <div className="flex items-center justify-between gap-2 w-full">
+            <Skeleton className="h-[20px] w-[48px]" />
+
+            <Skeleton className="h-[20px] w-[48px]" />
+          </div>
+
+          <div className="flex items-center justify-between gap-1 w-full">
+            <div className="flex items-center gap-x-1 text-xs text-muted-foreground">
+              <Skeleton className="h-[16px] w-[118px]" />
+            </div>
+            <ConversationStatusIcon
+              status="unresolved"
+              className="hidden md:block"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

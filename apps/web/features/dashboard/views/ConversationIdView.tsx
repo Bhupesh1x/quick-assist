@@ -130,6 +130,10 @@ export function ConversationIdView({ conversationId }: Props) {
     }
   }
 
+  if (conversation === undefined || messages?.status === "LoadingFirstPage") {
+    return <ConversationIdViewSkeleton />;
+  }
+
   return (
     <div>
       <header className="bg-background p-2 border-b flex items-center justify-between w-full">
@@ -212,7 +216,7 @@ export function ConversationIdView({ conversationId }: Props) {
                 onClick={onEnhance}
               >
                 <Wand2Icon />
-                Enhance
+                {isEnhancing ? "Enhancing..." : "Enhance"}
               </AIInputButton>
             </AIInputTools>
             <AIInputSubmit
@@ -228,6 +232,60 @@ export function ConversationIdView({ conversationId }: Props) {
           </AIInputToolbar>
         </AIInput>
       </Form>
+    </div>
+  );
+}
+
+export function ConversationIdViewSkeleton() {
+  return (
+    <div>
+      <header className="bg-background p-2 border-b flex items-center justify-between w-full">
+        <Button variant="outline" disabled>
+          <MoreHorizontalIcon />
+        </Button>
+      </header>
+
+      <main className="h-[calc(100vh-160px)] overflow-auto">
+        <AIConversation>
+          <AIConversationContent>
+            {Array.from({ length: 8 })?.map((_, index) => {
+              const isUser = index % 2 === 0;
+              const widths = ["w-[115px]", "w-[152px]", "w-[70px]"];
+              const width = widths[index % widths?.length];
+              return (
+                <AIMessage
+                  key={index}
+                  // Reverse here because we are looking from "operator" perspective here
+                  from={isUser ? "assistant" : "user"}
+                >
+                  <AIMessageContent className="animate-pulse">
+                    <div className={`h-4 ${width}`} />
+                  </AIMessageContent>
+                  {isUser ? <DicebarAvatar seed={"user"} size={32} /> : null}
+                </AIMessage>
+              );
+            })}
+          </AIConversationContent>
+        </AIConversation>
+      </main>
+      <div>
+        <AIInput>
+          <AIInputTextarea
+            disabled
+            placeholder={"Type your response as a operator..."}
+          />
+
+          <AIInputToolbar>
+            <AIInputTools>
+              <AIInputButton disabled>
+                <Wand2Icon />
+                Enhance
+              </AIInputButton>
+            </AIInputTools>
+            <AIInputSubmit disabled status="ready" type="submit" />
+          </AIInputToolbar>
+        </AIInput>
+      </div>
     </div>
   );
 }
