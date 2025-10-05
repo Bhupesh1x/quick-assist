@@ -1,9 +1,7 @@
+import { FilesView } from "@/features/files/views/FilesView";
+
 function FilesPage() {
-  return (
-    <div>
-      <h1>FilesPage</h1>
-    </div>
-  );
+  return <FilesView />;
 }
 
 export default FilesPage;

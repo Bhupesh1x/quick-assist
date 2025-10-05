@@ -1,19 +1,19 @@
 import {
+  Entry,
+  EntryId,
   vEntryId,
   guessMimeTypeFromContents,
   contentHashFromArrayBuffer,
   guessMimeTypeFromExtension,
-  Entry,
-  EntryId,
 } from "@convex-dev/rag";
 import { v, ConvexError } from "convex/values";
+import { paginationOptsValidator } from "convex/server";
 
 import { rag } from "../system/ai/rag";
 import { Id } from "../_generated/dataModel";
 import { action, mutation, query, QueryCtx } from "../_generated/server";
 
 import { extractTextContent } from "../lib/extractTextContent";
-import { paginationOptsValidator } from "convex/server";
 
 function guessMimeType(fileName: string, bytes: ArrayBuffer): string {
   return (
@@ -86,7 +86,7 @@ export const create = action({
     }
 
     return {
-      url: ctx.storage.getUrl(storageId),
+      url: await ctx.storage.getUrl(storageId),
       entryId,
     };
   },
