@@ -5,6 +5,7 @@ import { paginationOptsValidator } from "convex/server";
 import { action, query } from "../_generated/server";
 import { components, internal } from "../_generated/api";
 
+import { search } from "../system/ai/tools/search";
 import { supportAgent } from "../system/ai/agents/supportAgent";
 import { resolveConversation } from "../system/ai/tools/resolveConversation";
 import { escalateConversation } from "../system/ai/tools/escalateConversation";
@@ -59,8 +60,9 @@ export const create = action({
         {
           prompt: args.prompt,
           tools: {
-            escalateConversation,
-            resolveConversation,
+            escalateConversationTool: escalateConversation,
+            resolveConversationTool: resolveConversation,
+            searchTool: search,
           },
         }
       );

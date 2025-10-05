@@ -1,13 +1,14 @@
 import { generateText } from "ai";
+import { google } from "@ai-sdk/google";
 import { ConvexError, v } from "convex/values";
+import { saveMessage } from "@convex-dev/agent";
 import { paginationOptsValidator } from "convex/server";
 
 import { components, internal } from "../_generated/api";
 import { action, mutation, query } from "../_generated/server";
 
 import { supportAgent } from "../system/ai/agents/supportAgent";
-import { saveMessage } from "@convex-dev/agent";
-import { google } from "@ai-sdk/google";
+import { OPERATOR_MESSAGE_ENHANCEMENT_PROMPT } from "../system/constants";
 
 export const create = mutation({
   args: {
@@ -139,8 +140,7 @@ export const enhance = action({
       messages: [
         {
           role: "system",
-          content:
-            "Enhance the operator's message to be more professional, clear and helpful while maintaining their intent and key information",
+          content: OPERATOR_MESSAGE_ENHANCEMENT_PROMPT,
         },
         {
           role: "user",
