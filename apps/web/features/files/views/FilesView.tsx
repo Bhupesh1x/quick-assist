@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { usePaginatedQuery } from "convex/react";
 
+import { DeleteFileDialog } from "../components/DeleteFileDialog";
 import { UploadFileDialog } from "../components/UploadFileDialog";
 
 import {
@@ -26,6 +27,7 @@ import {
 import { Badge } from "@workspace/ui/components/badge";
 import { api } from "@workspace/backend/_generated/api";
 import { Button } from "@workspace/ui/components/button";
+import { PublicFile } from "@workspace/backend/private/files";
 import { useInfiniteScroll } from "@workspace/ui/hooks/useInfiniteScroll";
 import { InfiniteScrollTrigger } from "@workspace/ui/components/InfiniteScrollTrigger";
 
@@ -49,9 +51,20 @@ export function FilesView() {
   });
 
   const [isFileUploadDialogOpen, setIsFileUploadDialogOpen] = useState(false);
+  const [isFileDeleteDialogOpen, setIsFileDeleteDialogOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<PublicFile | null>(null);
 
   function onOpenFileUploadDialog() {
     setIsFileUploadDialogOpen(true);
+  }
+
+  function handleDeleteFileClick(file: PublicFile) {
+    setSelectedFile(file);
+    setIsFileDeleteDialogOpen(true);
+  }
+
+  function onFileDeleted() {
+    setSelectedFile(null);
   }
 
   return (
@@ -59,6 +72,12 @@ export function FilesView() {
       <UploadFileDialog
         open={isFileUploadDialogOpen}
         onOpenChange={setIsFileUploadDialogOpen}
+      />
+      <DeleteFileDialog
+        open={isFileDeleteDialogOpen}
+        onOpenChange={setIsFileDeleteDialogOpen}
+        file={selectedFile}
+        onFileDeleted={onFileDeleted}
       />
       <div className="min-h-screen bg-muted p-8 w-full">
         <div className="mx-auto w-full max-w-screen-lg">
@@ -135,7 +154,10 @@ export function FilesView() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                              <DropdownMenuItem className="group">
+                              <DropdownMenuItem
+                                className="group"
+                                onClick={() => handleDeleteFileClick(file)}
+                              >
                                 <Trash2Icon className="size-4 mr-2 text-destructive group-hover:text-destructive/60" />
                                 <span className="text-destructive group-hover:text-destructive/60">
                                   Delete
