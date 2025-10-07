@@ -43,4 +43,12 @@ export default defineSchema({
     .index("by_thread_id", ["threadId"])
     .index("by_contactSession_id", ["contactSessionId"])
     .index("by_status_and_organization_id", ["status", "organizationId"]),
+  plugins: defineTable({
+    organizationId: v.string(),
+    service: v.union(v.literal("vapi")),
+    secretName: v.string(),
+    value: v.string(),
+  })
+    .index("by_organization_id", ["organizationId"])
+    .index("by_organization_id_and_service", ["organizationId", "service"]),
 });
