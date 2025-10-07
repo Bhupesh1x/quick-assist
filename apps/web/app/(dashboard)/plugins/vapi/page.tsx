@@ -1,9 +1,7 @@
+import { VapiView } from "@/features/plugins/views/VapiView";
+
 function VoiceAssistantsPage() {
-  return (
-    <div>
-      <h1>VoiceAssistantsPage</h1>
-    </div>
-  );
+  return <VapiView />;
 }
 
 export default VoiceAssistantsPage;
