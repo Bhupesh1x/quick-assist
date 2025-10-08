@@ -31,7 +31,7 @@ export const upsert = internalMutation({
         organizationId: args.organizationId,
         secretName: args.secretName,
         service: args.service,
-        value: args.value,
+        value: encryptedValue,
       });
     }
   },
@@ -55,10 +55,11 @@ export const getOneWithOrgIdAndService = internalQuery({
     }
 
     const decryptedValue = decrypt(plugin.value);
+    const value = decryptedValue ? JSON.parse(decryptedValue) : null;
 
     return {
       ...plugin,
-      value: decryptedValue,
+      value,
     };
   },
 });

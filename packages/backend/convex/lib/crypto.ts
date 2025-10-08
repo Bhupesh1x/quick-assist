@@ -1,22 +1,43 @@
-import crypto from "crypto";
+import CryptoJS from "crypto-js";
 
-const algorithm = "aes-256-cbc";
-
-const key = Buffer.from(process.env.ENCRYPTION_KEY!, "utf-8");
-const iv = Buffer.from(process.env.ENCRYPTION_IV!, "utf-8");
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY!;
 
 export function encrypt(value: string) {
-  const cipher = crypto.createCipheriv(algorithm, key, iv);
-  let encrypted = cipher.update(value, "utf-8", "hex");
-  encrypted += cipher.final("hex");
+  const key = CryptoJS.enc.Utf8.parse(ENCRYPTION_KEY);
+  const iv = CryptoJS.lib.WordArray.random(16);
 
-  return encrypted;
+  const encrypted = CryptoJS.AES.encrypt(value, key, { iv });
+
+  // Prepend IV to ciphertext (both WordArrays)
+  const encryptedWords = iv.concat(encrypted.ciphertext);
+
+  // Encode combined data to Base64
+  return CryptoJS.enc.Base64.stringify(encryptedWords);
 }
 
-export function decrypt(encryptedText: string) {
-  const decipher = crypto.createDecipheriv(algorithm, key, iv);
-  let decrypted = decipher.update(encryptedText, "hex", "utf-8");
-  decrypted += decipher.final("utf-8");
+export function decrypt(value: string) {
+  const key = CryptoJS.enc.Utf8.parse(ENCRYPTION_KEY);
+  const ivAndCiphertext = CryptoJS.enc.Base64.parse(value);
 
-  return decrypted;
+  // IV is first 16 bytes = 128 bits = 4 words
+  const iv = CryptoJS.lib.WordArray.create(
+    ivAndCiphertext.words.slice(0, 4),
+    16
+  );
+
+  // Ciphertext is the rest
+  const ciphertext = CryptoJS.lib.WordArray.create(
+    ivAndCiphertext.words.slice(4),
+    ivAndCiphertext.sigBytes - 16
+  );
+
+  const cipherParams = CryptoJS.lib.CipherParams.create({
+    ciphertext,
+  });
+
+  const decrypted = CryptoJS.AES.decrypt(cipherParams, key, { iv });
+
+  const plaintext = decrypted.toString(CryptoJS.enc.Utf8);
+
+  return plaintext ?? "{}";
 }
