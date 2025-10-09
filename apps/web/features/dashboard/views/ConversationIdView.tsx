@@ -1,6 +1,7 @@
 "use client";
 
 import z from "zod";
+import { toast } from "sonner";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAction, useMutation, useQuery } from "convex/react";
@@ -75,8 +76,8 @@ export function ConversationIdView({ conversationId }: Props) {
       });
 
       form.reset();
-    } catch (error) {
-      console.log(error);
+    } catch {
+      toast.error("Failed to add message. Please try again after sometime");
     }
   }
 
@@ -97,8 +98,11 @@ export function ConversationIdView({ conversationId }: Props) {
         conversationId,
         status: newStatus,
       });
-    } catch (error) {
-      console.log(error);
+      toast.success("Status updated");
+    } catch {
+      toast.error(
+        "Failed to update conversation status. Please try again after sometime"
+      );
     } finally {
       setIsUpdatingStatus(false);
     }
@@ -123,8 +127,10 @@ export function ConversationIdView({ conversationId }: Props) {
       const response = await enhancePrompt({ prompt: message });
 
       form.setValue("message", response);
-    } catch (error) {
-      console.log(error);
+    } catch {
+      toast.error(
+        "Failed to enhance your message. Please try again after sometime"
+      );
     } finally {
       setIsEnhancing(false);
     }

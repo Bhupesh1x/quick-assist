@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { useMutation } from "convex/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -49,8 +50,11 @@ export function VapiPluginForm({ open, onOpenChange }: Props) {
       });
 
       onOpenChange(false);
-    } catch (error) {
-      console.log(error);
+      toast.success("Plugin added successfully");
+    } catch {
+      toast.error(
+        "Failed to connect your plugin. Please try again after sometime"
+      );
     }
   }
 

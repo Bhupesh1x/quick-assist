@@ -44,8 +44,6 @@ export function VapiView() {
     service: "vapi",
   });
 
-  console.log({ plugin });
-
   function onOpenVapiPluginDialog() {
     setIsVapiPluginDialogOpen(true);
   }

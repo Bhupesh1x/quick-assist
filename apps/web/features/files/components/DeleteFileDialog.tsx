@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import { useState } from "react";
 import { useMutation } from "convex/react";
 
@@ -48,8 +49,9 @@ export function DeleteFileDialog({
 
       onFileDeleted?.();
       handleCancel();
-    } catch (error) {
-      console.log(error);
+      toast.success("File deleted");
+    } catch {
+      toast.error("Failed to delete file. Please try again after sometime");
     } finally {
       setIsDeleting(false);
     }

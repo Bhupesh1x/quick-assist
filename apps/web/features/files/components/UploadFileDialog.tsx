@@ -1,6 +1,7 @@
 "use client";
 
 import z from "zod";
+import { toast } from "sonner";
 import { useState } from "react";
 import { useAction } from "convex/react";
 import { useForm } from "react-hook-form";
@@ -92,8 +93,9 @@ export function UploadFileDialog({ open, onOpenChange, onFileUpload }: Props) {
 
       onFileUpload?.();
       handleCancel();
-    } catch (error) {
-      console.log(error);
+      toast.success("File uploaded");
+    } catch {
+      toast.error("Failed to upload file. Please try again after sometime");
     }
   }
 
