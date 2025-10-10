@@ -50,6 +50,7 @@ export function VapiPluginForm({ open, onOpenChange }: Props) {
       });
 
       onOpenChange(false);
+      form?.reset();
       toast.success("Plugin added successfully");
     } catch {
       toast.error(
@@ -81,6 +82,7 @@ export function VapiPluginForm({ open, onOpenChange }: Props) {
                       {...field}
                       placeholder="Your public API key"
                       disabled={false}
+                      type="password"
                     />
                   </FormControl>
                 </FormItem>
@@ -97,6 +99,7 @@ export function VapiPluginForm({ open, onOpenChange }: Props) {
                       {...field}
                       placeholder="Your private API key"
                       disabled={form.formState.isSubmitting}
+                      type="password"
                     />
                   </FormControl>
                 </FormItem>

@@ -12,6 +12,8 @@ import { useQuery } from "convex/react";
 import { api } from "@workspace/backend/_generated/api";
 
 import { VapiPluginForm } from "../components/VapiPluginForm";
+import { VapiConnectedView } from "../components/VapiConnectedView";
+import { VapiPluginRemoveForm } from "../components/VapiPluginRemoveForm";
 import { IntegrationFeature, PluginCard } from "../components/PluginCard";
 
 export const VAPI_FEATURES: IntegrationFeature[] = [
@@ -39,13 +41,19 @@ export const VAPI_FEATURES: IntegrationFeature[] = [
 
 export function VapiView() {
   const [isVapiPluginDialogOpen, setIsVapiPluginDialogOpen] = useState(false);
+  const [isVapiPluginRemoveDialogOpen, setIsVapiPluginRemoveDialogOpen] =
+    useState(false);
 
   const plugin = useQuery(api.private.plugins.getOne, {
     service: "vapi",
   });
 
-  function onOpenVapiPluginDialog() {
-    setIsVapiPluginDialogOpen(true);
+  function onToggleDialog() {
+    if (plugin) {
+      setIsVapiPluginRemoveDialogOpen(true);
+    } else {
+      setIsVapiPluginDialogOpen(true);
+    }
   }
 
   return (
@@ -53,6 +61,10 @@ export function VapiView() {
       <VapiPluginForm
         open={isVapiPluginDialogOpen}
         onOpenChange={setIsVapiPluginDialogOpen}
+      />
+      <VapiPluginRemoveForm
+        open={isVapiPluginRemoveDialogOpen}
+        onOpenChange={setIsVapiPluginRemoveDialogOpen}
       />
       <div className="min-h-screen bg-muted p-8 w-full">
         <div className="max-w-screen-md mx-auto">
@@ -69,13 +81,11 @@ export function VapiView() {
                 serviceName="Vapi"
                 serviceImageUrl="/vapi.jpg"
                 features={VAPI_FEATURES}
-                onSubmit={onOpenVapiPluginDialog}
+                onSubmit={onToggleDialog}
                 disabled={plugin === undefined}
               />
             ) : (
-              <div>
-                <h1>Connected!!</h1>
-              </div>
+              <VapiConnectedView onDisconnect={onToggleDialog} />
             )}
           </main>
         </div>
