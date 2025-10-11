@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { useMutation } from "convex/react";
@@ -8,8 +7,8 @@ import {
   Card,
   CardTitle,
   CardHeader,
-  CardDescription,
   CardContent,
+  CardDescription,
 } from "@workspace/ui/components/card";
 import {
   Form,
@@ -26,19 +25,12 @@ import { api } from "@workspace/backend/_generated/api";
 import { Button } from "@workspace/ui/components/button";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { Separator } from "@workspace/ui/components/separator";
+import { Doc } from "@workspace/backend/_generated/dataModel";
 
-const formSchema = z.object({
-  greetMessage: z.string().trim().min(1, "Greeting message is required"),
-  defaultSuggestions: z.object({
-    suggestion1: z.optional(z.string()),
-    suggestion2: z.optional(z.string()),
-    suggestion3: z.optional(z.string()),
-  }),
-  vapiSettings: z.object({
-    assistantId: z.optional(z.string()),
-    phoneNumber: z.optional(z.string()),
-  }),
-});
+import type { FormSchema } from "../types";
+import { customizationsFormSchema } from "../schemas";
+
+import { VapiFormFields } from "./VapiFormFields";
 
 interface CustomizationData {
   organizationId: string;
@@ -60,8 +52,8 @@ interface Props {
 }
 
 export function CustomizationForm({ initialData, hasVapiPlugin }: Props) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(customizationsFormSchema),
     defaultValues: {
       greetMessage:
         initialData?.greetMessage || "Hi, How can i help you today?",
@@ -79,12 +71,25 @@ export function CustomizationForm({ initialData, hasVapiPlugin }: Props) {
 
   const upsertData = useMutation(api.private.widgetSettings.upsert);
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: FormSchema) {
+    if (!form.formState.isSubmitting || !form.formState.isDirty) return;
+
+    const vapiSettings: Doc<"widgetSettings">["vapiSettings"] = {
+      assistantId:
+        values.vapiSettings?.assistantId === "none"
+          ? ""
+          : values.vapiSettings?.assistantId,
+      phoneNumber:
+        values.vapiSettings?.phoneNumber === "none"
+          ? ""
+          : values.vapiSettings?.phoneNumber,
+    };
+
     try {
       await upsertData({
         defaultSuggestions: values.defaultSuggestions,
         greetMessage: values.greetMessage,
-        vapiSettings: values.vapiSettings,
+        vapiSettings,
       });
       toast.success("Widget settings saved");
     } catch {
@@ -194,12 +199,17 @@ export function CustomizationForm({ initialData, hasVapiPlugin }: Props) {
                 Configure voice calling features powered by vapi
               </CardDescription>
             </CardHeader>
-            <CardContent className="p-0">TODO: VAPI SETTINGS</CardContent>
+            <CardContent className="p-0 space-y-6">
+              <VapiFormFields form={form} />
+            </CardContent>
           </Card>
         )}
 
         <div className="flex justify-end w-full">
-          <Button type="submit" disabled={form.formState.isSubmitting}>
+          <Button
+            type="submit"
+            disabled={form.formState.isSubmitting || !form.formState.isDirty}
+          >
             {form.formState.isSubmitting
               ? "Saving settings..."
               : "Save settings"}
