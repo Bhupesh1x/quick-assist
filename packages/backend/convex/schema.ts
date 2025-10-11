@@ -60,8 +60,8 @@ export default defineSchema({
       suggestion3: v.optional(v.string()),
     }),
     vapiSettings: v.object({
-      assistantId: v.string(),
-      phoneNumber: v.string(),
+      assistantId: v.optional(v.string()),
+      phoneNumber: v.optional(v.string()),
     }),
   }).index("by_organization_id", ["organizationId"]),
 });
