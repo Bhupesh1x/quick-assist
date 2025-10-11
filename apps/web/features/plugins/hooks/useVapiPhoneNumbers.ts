@@ -18,15 +18,21 @@ export function useVapiPhoneNumbers(): {
   const getPhoneNumbers = useAction(api.private.vapi.getPhoneNumbers);
 
   useEffect(() => {
+    let cancelled = false;
+
     async function fetchPhoneNumbers() {
       try {
         setIsLoading(true);
 
         const result = await getPhoneNumbers();
 
+        if (cancelled) return;
+
         setData(result);
         setError(null);
       } catch (error) {
+        if (cancelled) return;
+
         setError(error as Error);
         toast.error("Failed to fetch vapi phone numbers");
       } finally {
@@ -35,6 +41,10 @@ export function useVapiPhoneNumbers(): {
     }
 
     fetchPhoneNumbers();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return { isLoading, error, data };
