@@ -1,6 +1,7 @@
 "use client";
 
 import z from "zod";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useAction, useQuery } from "convex/react";
@@ -12,6 +13,7 @@ import {
   screenAtom,
   conversationIdAtom,
   organizationIdAtom,
+  widgetSettingsAtom,
   contactSessionIdFamily,
 } from "../atoms/WidgetAtom";
 import { WidgetHeader } from "../components/WidgetHeader";
@@ -27,6 +29,10 @@ import {
   AIMessage,
   AIMessageContent,
 } from "@workspace/ui/components/ai/message";
+import {
+  AISuggestion,
+  AISuggestions,
+} from "@workspace/ui/components/ai/suggestion";
 import {
   AIConversation,
   AIConversationContent,
@@ -50,6 +56,7 @@ export function WidgetChatScreen() {
   const conversationId = useAtomValue(conversationIdAtom);
   const organizationId = useAtomValue(organizationIdAtom);
   const sessionId = useAtomValue(contactSessionIdFamily(organizationId || ""));
+  const widgetSettings = useAtomValue(widgetSettingsAtom);
 
   const conversation = useQuery(
     api.public.conversations.getOne,
@@ -105,6 +112,26 @@ export function WidgetChatScreen() {
       loadSize: 10,
     });
 
+  const suggestions = useMemo(() => {
+    if (!widgetSettings?.defaultSuggestions) return [];
+
+    return Object.keys(widgetSettings.defaultSuggestions)?.map((key) => {
+      return widgetSettings?.defaultSuggestions[
+        key as keyof typeof widgetSettings.defaultSuggestions
+      ];
+    });
+  }, [widgetSettings?._id]);
+
+  function onSuggestion(suggestion: string) {
+    form.setValue("message", suggestion, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+
+    form.handleSubmit(onSubmit)();
+  }
+
   return (
     <>
       <WidgetHeader className="w-full flex items-center justify-between px-2 py-4">
@@ -145,6 +172,24 @@ export function WidgetChatScreen() {
           ))}
         </AIConversationContent>
       </AIConversation>
+
+      {toUIMessages(messages?.results ?? [])?.length === 1 && (
+        <AISuggestions className="flex flex-col items-end w-full p-2">
+          {suggestions?.map((suggestion) => {
+            if (!suggestion) return null;
+
+            return (
+              <AISuggestion
+                disabled={form.formState.isSubmitting}
+                key={suggestion}
+                onClick={() => onSuggestion(suggestion)}
+                suggestion={suggestion}
+              />
+            );
+          })}
+        </AISuggestions>
+      )}
+
       <Form {...form}>
         <AIInput onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
