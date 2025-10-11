@@ -1,9 +1,7 @@
+import { CustomizationsView } from "@/features/customizations/views/CustomizationsView";
+
 function CustomizationsPage() {
-  return (
-    <div>
-      <h1>CustomizationsPage</h1>
-    </div>
-  );
+  return <CustomizationsView />;
 }
 
 export default CustomizationsPage;
