@@ -12,6 +12,7 @@ import {
 import { Card } from "@workspace/ui/components/card";
 import { Button } from "@workspace/ui/components/button";
 
+import { VapiAssistants } from "./VapiAssistants";
 import { VapiPhoneNumbers } from "./VapiPhoneNumbers";
 
 interface Props {
@@ -98,7 +99,9 @@ export function VapiConnectedView({ onDisconnect }: Props) {
           <TabsContent value="phone-numbers">
             <VapiPhoneNumbers />
           </TabsContent>
-          <TabsContent value="assistants">TODO: Assistants</TabsContent>
+          <TabsContent value="assistants">
+            <VapiAssistants />
+          </TabsContent>
         </Tabs>
       </div>
     </div>

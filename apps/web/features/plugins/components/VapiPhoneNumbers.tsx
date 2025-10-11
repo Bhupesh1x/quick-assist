@@ -16,7 +16,7 @@ export function VapiPhoneNumbers() {
   const { isLoading, data: phoneNumbers } = useVapiPhoneNumbers();
 
   return (
-    <div className="border-b bg-background">
+    <div className="border-b bg-background max-w-[400px] md:max-w-full">
       <Table>
         <TableHeader>
           <TableRow>
