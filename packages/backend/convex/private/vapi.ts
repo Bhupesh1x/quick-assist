@@ -1,7 +1,6 @@
 import { ConvexError } from "convex/values";
 import { VapiClient, Vapi } from "@vapi-ai/server-sdk";
 
-import { decrypt } from "../lib/crypto";
 import { internal } from "../_generated/api";
 import { action } from "../_generated/server";
 
@@ -42,7 +41,7 @@ export const getPhoneNumbers = action({
     }
 
     const secretValue = plugin?.value;
-    const secretData = JSON.parse(decrypt(secretValue));
+    const secretData = secretValue?.privateApiKey;
 
     if (!secretData) {
       throw new ConvexError({
@@ -98,7 +97,7 @@ export const getAssistants = action({
     }
 
     const secretValue = plugin?.value;
-    const secretData = JSON.parse(decrypt(secretValue));
+    const secretData = secretValue?.privateApiKey;
 
     if (!secretData) {
       throw new ConvexError({
