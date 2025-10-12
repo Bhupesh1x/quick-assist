@@ -46,7 +46,7 @@ import { DicebarAvatar } from "@workspace/ui/components/ai/dicebar-avatar";
 import { InfiniteScrollTrigger } from "@workspace/ui/components/InfiniteScrollTrigger";
 
 const formSchema = z.object({
-  message: z.string().trim().min(3, "Message is required"),
+  message: z.string().trim().min(1, "Message is required"),
 });
 
 export function WidgetChatScreen() {

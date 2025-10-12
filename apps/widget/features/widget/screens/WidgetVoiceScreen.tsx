@@ -51,9 +51,7 @@ export function WidgetVoiceScreen() {
         </div>
       </WidgetHeader>
       {transcript?.length ? (
-        <AIConversation
-          className={`h-full flex-1 overflow-y-auto ${isConnected ? "max-h-[calc(100vh-180px)]" : "max-h-[calc(100vh-148px)]"}`}
-        >
+        <AIConversation className="h-full">
           <AIConversationContent>
             {transcript?.map((message, index) => (
               <AIMessage

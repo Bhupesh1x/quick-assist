@@ -24,6 +24,7 @@ import {
 import {
   AIConversation,
   AIConversationContent,
+  AIConversationScrollButton,
 } from "@workspace/ui/components/ai/conversation";
 import { api } from "@workspace/backend/_generated/api";
 import { Button } from "@workspace/ui/components/button";
@@ -155,7 +156,7 @@ export function ConversationIdView({ conversationId }: Props) {
         )}
       </header>
 
-      <main className="h-[calc(100vh-160px)] overflow-auto">
+      <main className="h-[calc(100vh-164px)] overflow-auto">
         <AIConversation>
           <AIConversationContent>
             <InfiniteScrollTrigger
@@ -180,6 +181,7 @@ export function ConversationIdView({ conversationId }: Props) {
               </AIMessage>
             ))}
           </AIConversationContent>
+          <AIConversationScrollButton />
         </AIConversation>
       </main>
       <Form {...form}>
