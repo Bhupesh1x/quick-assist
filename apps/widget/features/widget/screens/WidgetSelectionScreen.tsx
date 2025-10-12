@@ -1,11 +1,18 @@
+import {
+  MicIcon,
+  PhoneIcon,
+  ChevronRightIcon,
+  MessageSquareTextIcon,
+} from "lucide-react";
 import { useState } from "react";
 import { useMutation } from "convex/react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { ChevronRightIcon, MessageSquareTextIcon } from "lucide-react";
 
 import {
   screenAtom,
   errorMessageAtom,
+  hasVapiSecretsAtom,
+  widgetSettingsAtom,
   conversationIdAtom,
   organizationIdAtom,
   contactSessionIdFamily,
@@ -24,6 +31,8 @@ export function WidgetSelectionScreen() {
   const setConversationId = useSetAtom(conversationIdAtom);
 
   const organizationId = useAtomValue(organizationIdAtom);
+  const hasVapiSecrets = useAtomValue(hasVapiSecretsAtom);
+  const widgetSettings = useAtomValue(widgetSettingsAtom);
   const sessionId = useAtomValue(contactSessionIdFamily(organizationId || ""));
 
   const createConversation = useMutation(api.public.conversations.create);
@@ -55,6 +64,14 @@ export function WidgetSelectionScreen() {
     }
   }
 
+  function onStartVoiceCall() {
+    setScreen("voice");
+  }
+
+  function onStartCallUs() {
+    setScreen("contact");
+  }
+
   return (
     <>
       <WidgetHeader>
@@ -76,6 +93,34 @@ export function WidgetSelectionScreen() {
           </div>
           <ChevronRightIcon />
         </Button>
+        {hasVapiSecrets && widgetSettings?.vapiSettings?.assistantId ? (
+          <Button
+            variant="outline"
+            className="h-16 flex items-center justify-between w-full"
+            onClick={onStartVoiceCall}
+            disabled={isPending}
+          >
+            <div className="flex items-center gap-x-2">
+              <MicIcon className="size-4" />
+              <p>Start voice call</p>
+            </div>
+            <ChevronRightIcon />
+          </Button>
+        ) : null}
+        {hasVapiSecrets && widgetSettings?.vapiSettings?.phoneNumber ? (
+          <Button
+            variant="outline"
+            className="h-16 flex items-center justify-between w-full"
+            onClick={onStartCallUs}
+            disabled={isPending}
+          >
+            <div className="flex items-center gap-x-2">
+              <PhoneIcon className="size-4" />
+              <p>Call us</p>
+            </div>
+            <ChevronRightIcon />
+          </Button>
+        ) : null}
       </div>
       <WidgetFooter />
     </>
