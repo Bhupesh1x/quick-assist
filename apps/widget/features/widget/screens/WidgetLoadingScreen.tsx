@@ -5,6 +5,7 @@ import { useAction, useMutation, useQuery } from "convex/react";
 
 import {
   screenAtom,
+  vapiSecretAtom,
   errorMessageAtom,
   widgetSettingsAtom,
   loadingMessageAtom,
@@ -19,7 +20,7 @@ interface Props {
   organizationId: string | null;
 }
 
-type InitStep = "org" | "session" | "settings" | "done";
+type InitStep = "org" | "session" | "settings" | "vapi" | "done";
 
 export function WidgetLoadingScreen({ organizationId }: Props) {
   const loadingMessage = useAtomValue(loadingMessageAtom);
@@ -29,6 +30,7 @@ export function WidgetLoadingScreen({ organizationId }: Props) {
   const setScreen = useSetAtom(screenAtom);
   const setErrorMessage = useSetAtom(errorMessageAtom);
   const setWidgetSettings = useSetAtom(widgetSettingsAtom);
+  const setVapiSecretAtom = useSetAtom(vapiSecretAtom);
 
   const contactSessionId = useAtomValue(
     contactSessionIdFamily(organizationId || "")
@@ -111,9 +113,38 @@ export function WidgetLoadingScreen({ organizationId }: Props) {
 
     if (widgetSettings !== undefined) {
       setWidgetSettings(widgetSettings);
-      setStep("done");
+      setStep("vapi");
     }
   }, [step, widgetSettings?._id]);
+
+  // Step 4: Load vapi public secrets
+  const vapiPublicSecret = useAction(api.public.secrets.getVapiSecrets);
+
+  useEffect(() => {
+    if (step !== "vapi") {
+      return;
+    }
+
+    setLoadingMessage("Loading voice features...");
+
+    if (!organizationId) {
+      setErrorMessage("Organization id is required");
+      setScreen("error");
+      return;
+    }
+
+    vapiPublicSecret({
+      organizationId,
+    })
+      .then((res) => {
+        setVapiSecretAtom(res);
+        setStep("done");
+      })
+      .catch(() => {
+        setVapiSecretAtom(null);
+        setStep("done");
+      });
+  }, [step, organizationId]);
 
   useEffect(() => {
     if (step !== "done") return;
