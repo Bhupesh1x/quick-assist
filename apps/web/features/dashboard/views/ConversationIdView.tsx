@@ -1,6 +1,6 @@
 "use client";
 
-import z from "zod";
+import { z } from "zod";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -35,6 +35,7 @@ import { DicebarAvatar } from "@workspace/ui/components/ai/dicebar-avatar";
 import { InfiniteScrollTrigger } from "@workspace/ui/components/InfiniteScrollTrigger";
 
 import { getNewConversationStatus } from "../lib";
+import { ContactPanel } from "../components/ContactPanel";
 import { ConversationStatusButton } from "../components/ConversationStatusButton";
 
 interface Props {
@@ -144,9 +145,11 @@ export function ConversationIdView({ conversationId }: Props) {
   return (
     <div>
       <header className="bg-background p-2 border-b flex items-center justify-between w-full">
-        <Button variant="outline">
-          <MoreHorizontalIcon />
-        </Button>
+        <ContactPanel conversationId={conversation?._id}>
+          <Button variant="outline">
+            <MoreHorizontalIcon />
+          </Button>
+        </ContactPanel>
         {!!conversation && (
           <ConversationStatusButton
             onClick={onUpdate}
