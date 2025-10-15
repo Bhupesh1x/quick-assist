@@ -33,7 +33,7 @@ export function VapiAssistants() {
             </TableRow>
           )}
 
-          {!assistants?.length && (
+          {!isLoading && !assistants?.length && (
             <TableRow>
               <TableCell
                 colSpan={3}

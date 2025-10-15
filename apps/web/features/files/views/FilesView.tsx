@@ -31,7 +31,11 @@ import { PublicFile } from "@workspace/backend/private/files";
 import { useInfiniteScroll } from "@workspace/ui/hooks/useInfiniteScroll";
 import { InfiniteScrollTrigger } from "@workspace/ui/components/InfiniteScrollTrigger";
 
-export function FilesView() {
+interface Props {
+  isOverlay?: boolean;
+}
+
+export function FilesView({ isOverlay = false }: Props) {
   const files = usePaginatedQuery(
     api.private.files.list,
     {},
@@ -55,15 +59,21 @@ export function FilesView() {
   const [selectedFile, setSelectedFile] = useState<PublicFile | null>(null);
 
   function onOpenFileUploadDialog() {
+    if (isOverlay) return;
+
     setIsFileUploadDialogOpen(true);
   }
 
   function handleDeleteFileClick(file: PublicFile) {
+    if (isOverlay) return;
+
     setSelectedFile(file);
     setIsFileDeleteDialogOpen(true);
   }
 
   function onFileDeleted() {
+    if (isOverlay) return;
+
     setSelectedFile(null);
   }
 

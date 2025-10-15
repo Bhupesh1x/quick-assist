@@ -39,7 +39,11 @@ export const VAPI_FEATURES: IntegrationFeature[] = [
   },
 ];
 
-export function VapiView() {
+interface Props {
+  isOverlay?: boolean;
+}
+
+export function VapiView({ isOverlay = false }: Props) {
   const [isVapiPluginDialogOpen, setIsVapiPluginDialogOpen] = useState(false);
   const [isVapiPluginRemoveDialogOpen, setIsVapiPluginRemoveDialogOpen] =
     useState(false);
@@ -49,6 +53,8 @@ export function VapiView() {
   });
 
   function onToggleDialog() {
+    if (isOverlay) return;
+
     if (plugin) {
       setIsVapiPluginRemoveDialogOpen(true);
     } else {

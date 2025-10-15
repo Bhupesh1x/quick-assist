@@ -49,9 +49,14 @@ interface CustomizationData {
 interface Props {
   hasVapiPlugin: boolean;
   initialData?: CustomizationData | null;
+  isOverlay?: boolean;
 }
 
-export function CustomizationForm({ initialData, hasVapiPlugin }: Props) {
+export function CustomizationForm({
+  initialData,
+  hasVapiPlugin,
+  isOverlay = false,
+}: Props) {
   const form = useForm<FormSchema>({
     resolver: zodResolver(customizationsFormSchema),
     defaultValues: {
@@ -72,7 +77,8 @@ export function CustomizationForm({ initialData, hasVapiPlugin }: Props) {
   const upsertData = useMutation(api.private.widgetSettings.upsert);
 
   async function onSubmit(values: FormSchema) {
-    if (!form.formState.isSubmitting || !form.formState.isDirty) return;
+    if (!form.formState.isSubmitting || !form.formState.isDirty || isOverlay)
+      return;
 
     const vapiSettings: Doc<"widgetSettings">["vapiSettings"] = {
       assistantId:

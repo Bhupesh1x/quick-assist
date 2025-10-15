@@ -12,7 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.32.0",
+    "@clerk/nextjs": "6.33.4",
     "@convex-dev/agent": "0.1.16",
     "@hookform/resolvers": "5.2.2",
     "@workspace/backend": "workspace:*",
