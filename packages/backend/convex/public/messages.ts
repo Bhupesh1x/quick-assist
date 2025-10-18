@@ -49,6 +49,11 @@ export const create = action({
       });
     }
 
+    // This refreshes user's session if they are within the threshold
+    await ctx.runMutation(internal.system.contactSessions.refresh, {
+      sessionId: args.sessionId,
+    });
+
     const shouldGenerateText = conversation?.status === "unresolved";
 
     if (shouldGenerateText) {
