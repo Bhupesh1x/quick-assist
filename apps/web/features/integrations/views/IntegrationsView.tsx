@@ -37,9 +37,11 @@ export function IntegrationsView() {
   async function onCopy() {
     try {
       await navigator.clipboard.writeText(organization?.id ?? "");
-      toast.success("Snipped copied");
+      toast.success("Organization ID copied");
     } catch {
-      toast.error("Failed to copy snippet. Please try again after sometime");
+      toast.error(
+        "Failed to copy organization id. Please try again after sometime"
+      );
     }
   }
 
