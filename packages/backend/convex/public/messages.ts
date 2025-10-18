@@ -54,7 +54,16 @@ export const create = action({
       sessionId: args.sessionId,
     });
 
-    const shouldGenerateText = conversation?.status === "unresolved";
+    const subscription = await ctx.runQuery(
+      internal.system.subscriptions.getByOrganizationId,
+      {
+        organizationId: conversation.organizationId,
+      }
+    );
+
+    const shouldGenerateText =
+      conversation?.status === "unresolved" &&
+      subscription?.status === "active";
 
     if (shouldGenerateText) {
       await supportAgent.generateText(

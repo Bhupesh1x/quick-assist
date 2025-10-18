@@ -13,6 +13,7 @@ import { rag } from "../system/ai/rag";
 import { Id } from "../_generated/dataModel";
 import { action, mutation, query, QueryCtx } from "../_generated/server";
 
+import { internal } from "../_generated/api";
 import { extractTextContent } from "../lib/extractTextContent";
 
 function guessMimeType(fileName: string, bytes: ArrayBuffer): string {
@@ -46,6 +47,20 @@ export const create = action({
       throw new ConvexError({
         code: "UNAUTHORIZED",
         message: "Organization id is required",
+      });
+    }
+
+    const subscription = await ctx.runQuery(
+      internal.system.subscriptions.getByOrganizationId,
+      {
+        organizationId: orgId,
+      }
+    );
+
+    if (subscription?.status !== "active") {
+      throw new ConvexError({
+        code: "BAD_REQUEST",
+        message: "Missing subscription",
       });
     }
 

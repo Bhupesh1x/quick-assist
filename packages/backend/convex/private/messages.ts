@@ -135,6 +135,20 @@ export const enhance = action({
       });
     }
 
+    const subscription = await ctx.runQuery(
+      internal.system.subscriptions.getByOrganizationId,
+      {
+        organizationId: orgId,
+      }
+    );
+
+    if (subscription?.status !== "active") {
+      throw new ConvexError({
+        code: "BAD_REQUEST",
+        message: "Missing subscription",
+      });
+    }
+
     const response = await generateText({
       model: google("gemini-2.0-flash-lite"),
       messages: [
