@@ -1,29 +1,12 @@
-"use client";
+import { ConversationsView } from "@/features/dashboard/views/ConversationsView";
+import { ConversationLayout } from "@/features/dashboard/layouts/ConversationLayout";
 
-import { Authenticated, Unauthenticated, useQuery } from "convex/react";
-import { OrganizationSwitcher, SignInButton, UserButton } from "@clerk/nextjs";
-
-import { api } from "@workspace/backend/_generated/api";
-
-export default function Page() {
-  const data = useQuery(api.users.getMany);
-
+function Page() {
   return (
-    <>
-      <Authenticated>
-        <div className="flex items-center justify-center min-h-svh">
-          <div className="flex flex-col items-center justify-center gap-4">
-            <UserButton />
-            <OrganizationSwitcher hidePersonal />
-            <h1 className="text-2xl font-bold">Hello apps/web</h1>
-            {JSON.stringify(data, null, 2)}
-          </div>
-        </div>
-      </Authenticated>
-      <Unauthenticated>
-        <p>Not signed in!</p>
-        <SignInButton />
-      </Unauthenticated>
-    </>
+    <ConversationLayout>
+      <ConversationsView />
+    </ConversationLayout>
   );
 }
+
+export default Page;

@@ -24,8 +24,8 @@ export const INTEGRATIONS = [
 export type IntegrationId = (typeof INTEGRATIONS)[number]["id"];
 
 export const INTEGRATIONS_SCRIPT = {
-  html: `<script src="http://localhost:3001/widget.js" data-organization-id="{{ORGANIZATION_ID}}"></script>`,
-  react: `<script src="http://localhost:3001/widget.js" data-organization-id="{{ORGANIZATION_ID}}"></script>`,
-  nextjs: `<script src="http://localhost:3001/widget.js" data-organization-id="{{ORGANIZATION_ID}}"></script>`,
-  javascript: `<script src="http://localhost:3001/widget.js" data-organization-id="{{ORGANIZATION_ID}}"></script>`,
+  html: `<script src="https://quick-assist-widget.vercel.app/widget.js" data-organization-id="{{ORGANIZATION_ID}}"></script>`,
+  react: `<script src="https://quick-assist-widget.vercel.app/widget.js" data-organization-id="{{ORGANIZATION_ID}}"></script>`,
+  nextjs: `<script src="https://quick-assist-widget.vercel.app/widget.js" data-organization-id="{{ORGANIZATION_ID}}"></script>`,
+  javascript: `<script src="https://quick-assist-widget.vercel.app/widget.js" data-organization-id="{{ORGANIZATION_ID}}"></script>`,
 };

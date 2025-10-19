@@ -8,6 +8,10 @@ import {
   LibraryBigIcon,
   LayoutDashboardIcon,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
+
 import {
   Sidebar,
   SidebarRail,
@@ -21,10 +25,6 @@ import {
   SidebarGroupLabel,
   SidebarGroupContent,
 } from "@workspace/ui/components/sidebar";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
-
 import { cn } from "@workspace/ui/lib/utils";
 
 const customerSupportItems = [
@@ -72,6 +72,10 @@ export function DashboardSidebar() {
   function isActive(url: string) {
     if (url === "/") {
       return pathname === "/";
+    }
+
+    if (url === "/conversations" && pathname === "/") {
+      return true;
     }
 
     return pathname?.startsWith(url);
