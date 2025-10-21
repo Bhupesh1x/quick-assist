@@ -1,6 +1,6 @@
 import { Protect } from "@clerk/nextjs";
 
-import { VapiView } from "@/features/plugins/views/VapiView";
+import { VapiView, VapiViewSkeleton } from "@/features/plugins/views/VapiView";
 import { PremiumFeatureOverlay } from "@/features/billings/components/PremiumFeatureOverlay";
 
 function VoiceAssistantsPage() {
@@ -9,7 +9,7 @@ function VoiceAssistantsPage() {
       condition={(has) => has({ plan: "pro" })}
       fallback={
         <PremiumFeatureOverlay>
-          <VapiView isOverlay={true} />
+          <VapiViewSkeleton />
         </PremiumFeatureOverlay>
       }
     >

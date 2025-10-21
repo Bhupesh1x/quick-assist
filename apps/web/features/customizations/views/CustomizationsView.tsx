@@ -9,11 +9,7 @@ import {
   CustomizationFormSkeleton,
 } from "../components/CustomizationForm";
 
-interface Props {
-  isOverlay?: boolean;
-}
-
-export function CustomizationsView({ isOverlay = false }: Props) {
+export function CustomizationsView() {
   const widgetSettings = useQuery(api.private.widgetSettings.getOne);
   const plugin = useQuery(api.private.plugins.getOne, {
     service: "vapi",
@@ -39,7 +35,6 @@ export function CustomizationsView({ isOverlay = false }: Props) {
           <CustomizationForm
             hasVapiPlugin={!!plugin}
             initialData={widgetSettings}
-            isOverlay={isOverlay}
           />
         </main>
       </div>

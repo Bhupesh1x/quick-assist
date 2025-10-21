@@ -39,11 +39,7 @@ export const VAPI_FEATURES: IntegrationFeature[] = [
   },
 ];
 
-interface Props {
-  isOverlay?: boolean;
-}
-
-export function VapiView({ isOverlay = false }: Props) {
+export function VapiView() {
   const [isVapiPluginDialogOpen, setIsVapiPluginDialogOpen] = useState(false);
   const [isVapiPluginRemoveDialogOpen, setIsVapiPluginRemoveDialogOpen] =
     useState(false);
@@ -53,8 +49,6 @@ export function VapiView({ isOverlay = false }: Props) {
   });
 
   function onToggleDialog() {
-    if (isOverlay) return;
-
     if (plugin) {
       setIsVapiPluginRemoveDialogOpen(true);
     } else {
@@ -93,6 +87,33 @@ export function VapiView({ isOverlay = false }: Props) {
             ) : (
               <VapiConnectedView onDisconnect={onToggleDialog} />
             )}
+          </main>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export function VapiViewSkeleton() {
+  return (
+    <>
+      <div className="min-h-screen bg-muted p-8 w-full">
+        <div className="max-w-screen-md mx-auto">
+          <header className="space-y-2">
+            <h1 className="text-2xl md:text-4xl">Vapi Plugin</h1>
+            <p className="text-muted-foreground">
+              Connect Vapi to enable AI voice calls and phone support
+            </p>
+          </header>
+
+          <main className="mt-8">
+            <PluginCard
+              serviceName="Vapi"
+              serviceImageUrl="/vapi.jpg"
+              features={VAPI_FEATURES}
+              onSubmit={() => {}}
+              disabled
+            />
           </main>
         </div>
       </div>

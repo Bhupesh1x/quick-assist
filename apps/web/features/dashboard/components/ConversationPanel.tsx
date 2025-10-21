@@ -27,7 +27,6 @@ import {
 import { api } from "@workspace/backend/_generated/api";
 import { Skeleton } from "@workspace/ui/components/skeleton";
 import { Doc } from "@workspace/backend/_generated/dataModel";
-import { SidebarTrigger } from "@workspace/ui/components/sidebar";
 import { useInfiniteScroll } from "@workspace/ui/hooks/useInfiniteScroll";
 import { DicebarAvatar } from "@workspace/ui/components/ai/dicebar-avatar";
 import { InfiniteScrollTrigger } from "@workspace/ui/components/InfiniteScrollTrigger";
@@ -64,7 +63,6 @@ export function ConversationPanel() {
   return (
     <div>
       <div className="border-b p-2 space-y-2 md:space-y-0">
-        <SidebarTrigger className="md:hidden" />
         <Select
           defaultValue="all"
           onValueChange={(value) =>

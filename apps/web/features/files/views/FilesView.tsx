@@ -16,6 +16,7 @@ import {
   Table,
   TableRow,
   TableCell,
+  TableBody,
   TableHeader,
 } from "@workspace/ui/components/table";
 import {
@@ -31,11 +32,7 @@ import { PublicFile } from "@workspace/backend/private/files";
 import { useInfiniteScroll } from "@workspace/ui/hooks/useInfiniteScroll";
 import { InfiniteScrollTrigger } from "@workspace/ui/components/InfiniteScrollTrigger";
 
-interface Props {
-  isOverlay?: boolean;
-}
-
-export function FilesView({ isOverlay = false }: Props) {
+export function FilesView() {
   const files = usePaginatedQuery(
     api.private.files.list,
     {},
@@ -52,6 +49,7 @@ export function FilesView({ isOverlay = false }: Props) {
     loadMore: files.loadMore,
     status: files.status,
     loadSize: 10,
+    observerEnabled: false,
   });
 
   const [isFileUploadDialogOpen, setIsFileUploadDialogOpen] = useState(false);
@@ -59,21 +57,15 @@ export function FilesView({ isOverlay = false }: Props) {
   const [selectedFile, setSelectedFile] = useState<PublicFile | null>(null);
 
   function onOpenFileUploadDialog() {
-    if (isOverlay) return;
-
     setIsFileUploadDialogOpen(true);
   }
 
   function handleDeleteFileClick(file: PublicFile) {
-    if (isOverlay) return;
-
     setSelectedFile(file);
     setIsFileDeleteDialogOpen(true);
   }
 
   function onFileDeleted() {
-    if (isOverlay) return;
-
     setSelectedFile(null);
   }
 
@@ -118,7 +110,8 @@ export function FilesView({ isOverlay = false }: Props) {
                   <TableCell className="py-4 px-6">Size</TableCell>
                   <TableCell className="py-4 px-6">Actions</TableCell>
                 </TableRow>
-
+              </TableHeader>
+              <TableBody>
                 {files?.isLoading && files?.results?.length === 0 ? (
                   <TableRow>
                     <TableCell className="h-24 text-center" colSpan={4}>
@@ -179,7 +172,7 @@ export function FilesView({ isOverlay = false }: Props) {
                       </TableRow>
                     ))
                   : null}
-              </TableHeader>
+              </TableBody>
             </Table>
             {!isLoadingFirstPage && files?.results?.length > 0 ? (
               <div>
@@ -191,6 +184,51 @@ export function FilesView({ isOverlay = false }: Props) {
                 />
               </div>
             ) : null}
+          </main>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export function FilesViewSkeleton() {
+  return (
+    <>
+      <div className="min-h-screen bg-muted p-8 w-full">
+        <div className="mx-auto w-full max-w-screen-lg">
+          <header className="space-y-2">
+            <h1 className="text-2xl md:text-4xl">Knowledge Base</h1>
+            <p className="text-sm text-muted-foreground font-[550]">
+              Upload and manage documents for your AI assistant
+            </p>
+          </header>
+
+          <main className="border rounded-xl bg-background flex flex-col mt-6">
+            <div className="ml-auto py-4 px-6">
+              <Button className="w-fit text-white" size="sm">
+                <PlusIcon />
+                Add New
+              </Button>
+            </div>
+
+            <Table>
+              <TableHeader className="border-y">
+                <TableRow className="font-[580]">
+                  <TableCell className="py-4 px-6">Name</TableCell>
+                  <TableCell className="py-4 px-6">Type</TableCell>
+                  <TableCell className="py-4 px-6">Size</TableCell>
+                  <TableCell className="py-4 px-6">Actions</TableCell>
+                </TableRow>
+              </TableHeader>
+
+              <TableBody>
+                <TableRow>
+                  <TableCell className="h-24 text-center" colSpan={4}>
+                    No files found
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </main>
         </div>
       </div>
