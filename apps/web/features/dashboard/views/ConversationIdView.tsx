@@ -115,6 +115,7 @@ export function ConversationIdView({ conversationId }: Props) {
       loadMore: messages.loadMore,
       status: messages.status,
       loadSize: 10,
+      observerEnabled: false,
     });
 
   const [isEnhancing, setIsEnhancing] = useState(false);

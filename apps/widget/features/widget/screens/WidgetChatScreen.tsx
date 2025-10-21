@@ -110,6 +110,7 @@ export function WidgetChatScreen() {
       loadMore: messages.loadMore,
       status: messages.status,
       loadSize: 10,
+      observerEnabled: false,
     });
 
   const suggestions = useMemo(() => {
