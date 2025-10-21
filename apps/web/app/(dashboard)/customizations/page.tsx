@@ -1,6 +1,9 @@
 import { Protect } from "@clerk/nextjs";
 
-import { CustomizationsView } from "@/features/customizations/views/CustomizationsView";
+import {
+  CustomizationsView,
+  CustomizationsViewSkeleton,
+} from "@/features/customizations/views/CustomizationsView";
 import { PremiumFeatureOverlay } from "@/features/billings/components/PremiumFeatureOverlay";
 
 function CustomizationsPage() {
@@ -9,7 +12,7 @@ function CustomizationsPage() {
       condition={(has) => has({ plan: "pro" })}
       fallback={
         <PremiumFeatureOverlay>
-          <CustomizationsView isOverlay={true} />
+          <CustomizationsViewSkeleton />
         </PremiumFeatureOverlay>
       }
     >

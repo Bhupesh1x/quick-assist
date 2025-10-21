@@ -47,7 +47,7 @@ export function CustomizationsView({ isOverlay = false }: Props) {
   );
 }
 
-function CustomizationsViewSkeleton() {
+export function CustomizationsViewSkeleton() {
   return (
     <div className="bg-muted min-h-screen">
       <div className="max-w-screen-md mx-auto p-8">

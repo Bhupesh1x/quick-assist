@@ -35,6 +35,7 @@ export const getOne = query({
 export const upsert = mutation({
   args: {
     greetMessage: v.string(),
+    manualPhoneNumber: v.optional(v.string()),
     defaultSuggestions: v.object({
       suggestion1: v.optional(v.string()),
       suggestion2: v.optional(v.string()),
@@ -74,6 +75,7 @@ export const upsert = mutation({
         greetMessage: args.greetMessage,
         vapiSettings: args.vapiSettings,
         defaultSuggestions: args.defaultSuggestions,
+        manualPhoneNumber: args.manualPhoneNumber,
       });
     } else {
       await ctx.db.insert("widgetSettings", {
@@ -81,6 +83,7 @@ export const upsert = mutation({
         greetMessage: args.greetMessage,
         vapiSettings: args.vapiSettings,
         defaultSuggestions: args.defaultSuggestions,
+        manualPhoneNumber: args.manualPhoneNumber,
       });
     }
   },

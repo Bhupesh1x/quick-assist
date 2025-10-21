@@ -35,6 +35,7 @@ import { VapiFormFields } from "./VapiFormFields";
 interface CustomizationData {
   organizationId: string;
   greetMessage: string;
+  manualPhoneNumber?: string;
   defaultSuggestions: {
     suggestion1?: string;
     suggestion2?: string;
@@ -62,6 +63,7 @@ export function CustomizationForm({
     defaultValues: {
       greetMessage:
         initialData?.greetMessage || "Hi, How can i help you today?",
+      manualPhoneNumber: initialData?.manualPhoneNumber || "",
       defaultSuggestions: {
         suggestion1: initialData?.defaultSuggestions?.suggestion1 || "",
         suggestion2: initialData?.defaultSuggestions?.suggestion2 || "",
@@ -95,6 +97,7 @@ export function CustomizationForm({
       await upsertData({
         defaultSuggestions: values.defaultSuggestions,
         greetMessage: values.greetMessage,
+        manualPhoneNumber: values.manualPhoneNumber,
         vapiSettings,
       });
       toast.success("Widget settings saved");
@@ -130,6 +133,25 @@ export function CustomizationForm({
                   <FormMessage />
                   <FormDescription>
                     The first message customers see when they open the chat
+                  </FormDescription>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="manualPhoneNumber"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Manual phone number</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="tel" placeholder="+919751234567" />
+                  </FormControl>
+                  <FormMessage />
+                  <FormDescription>
+                    If you have trouble getting your phone number from Vapi, or
+                    you’d like to use a different number, please enter it here
+                    (including your country code, e.g. +919751234567).
                   </FormDescription>
                 </FormItem>
               )}
