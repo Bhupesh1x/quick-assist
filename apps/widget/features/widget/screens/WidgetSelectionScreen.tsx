@@ -107,7 +107,9 @@ export function WidgetSelectionScreen() {
             <ChevronRightIcon />
           </Button>
         ) : null}
-        {hasVapiSecrets && widgetSettings?.vapiSettings?.phoneNumber ? (
+        {hasVapiSecrets &&
+        (widgetSettings?.manualPhoneNumber ||
+          widgetSettings?.vapiSettings?.phoneNumber) ? (
           <Button
             variant="outline"
             className="h-16 flex items-center justify-between w-full"

@@ -19,7 +19,9 @@ export function WidgetContactScreen() {
   const setScreen = useSetAtom(screenAtom);
 
   const widgetSettings = useAtomValue(widgetSettingsAtom);
-  const phoneNumber = widgetSettings?.vapiSettings?.phoneNumber;
+  const phoneNumber =
+    widgetSettings?.manualPhoneNumber ||
+    widgetSettings?.vapiSettings?.phoneNumber;
 
   function onBack() {
     setScreen("selection");
