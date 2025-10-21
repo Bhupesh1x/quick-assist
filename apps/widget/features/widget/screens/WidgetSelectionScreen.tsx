@@ -80,7 +80,7 @@ export function WidgetSelectionScreen() {
           <p className="text-lg">Let&apos;s get you started</p>
         </div>
       </WidgetHeader>
-      <div className="flex-1 flex flex-col p-4 gap-y-2">
+      <div className="flex-1 flex flex-col p-4 gap-y-2 overflow-y-auto">
         <Button
           variant="outline"
           className="h-16 flex items-center justify-between w-full"
