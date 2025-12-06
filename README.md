@@ -81,7 +81,7 @@ Businesses can:
 <br />
 
 > **Widget Chat Example (Widget view) **
-<img src="https://res.cloudinary.com/doqvdfvrj/image/upload/v1765020608/web-setup-and-integrations_mmukes.png" alt="Widget Chat Example (Operator view)" />
+<img src="https://res.cloudinary.com/doqvdfvrj/image/upload/v1765020608/widget-chat-example_gwvxkf.png" alt="Widget Chat Example (Operator view)" />
 <br />
 
 > **Widget Voice Chat Example (Widget view) **
