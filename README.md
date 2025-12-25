@@ -1,5 +1,10 @@
 # Quick Assist: A B2B AI SaaS Support Platform
 
+## Test credentials
+
+- email: guest@gmail.com
+- password: GuestPass12345
+
 ## Description
 The **B2B AI SaaS Support Platform** is a full-stack, AI-powered customer support solution built from scratch using **Next.js 15**, **React 19**, **Convex**, **Turborepo**, and **Vapi**.
 
