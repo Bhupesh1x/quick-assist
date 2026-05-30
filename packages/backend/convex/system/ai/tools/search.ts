@@ -44,7 +44,7 @@ export const search = createTool({
       ?.join(", ")}. Here is the context:\n\n${searchResults?.text}`;
 
     const response = await generateText({
-      model: groq.chat("llama-3.3-70b-versatile"),
+      model: groq("llama-3.3-70b-versatile"),
       messages: [
         {
           role: "system",

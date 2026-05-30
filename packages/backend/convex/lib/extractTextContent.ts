@@ -1,13 +1,14 @@
 import { generateText } from "ai";
 import { groq } from "@ai-sdk/groq";
+import { google } from "@ai-sdk/google";
 import { ConvexError } from "convex/values";
 
 import type { StorageActionWriter } from "convex/server";
 
 const AI_MODELS = {
-  image: groq.chat("llama-3.3-70b-versatile"),
-  pdf: groq.chat("llama-3.3-70b-versatile"),
-  text: groq.chat("llama-3.3-70b-versatile"),
+  image: google("gemini-2.5-flash"),
+  pdf: google("gemini-2.5-flash"),
+  text: groq("llama-3.3-70b-versatile"),
 } as const;
 
 const SUPPORTED_IMAGE_TYPES = [
