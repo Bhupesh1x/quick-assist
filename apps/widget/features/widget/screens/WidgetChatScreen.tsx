@@ -93,14 +93,16 @@ export function WidgetChatScreen() {
 
   const createMessage = useAction(api.public.messages.create);
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!sessionId || !conversation?.threadId) return;
+  async function onSubmit() {
+    const prompt = form.getValues("message")?.trim();
+    console.log("bh-prompt", prompt);
+    if (!sessionId || !conversation?.threadId || !prompt) return;
 
     form.reset();
 
     await createMessage({
       sessionId,
-      prompt: values.message,
+      prompt: prompt,
       threadId: conversation.threadId,
     });
   }
@@ -135,8 +137,10 @@ export function WidgetChatScreen() {
 
   const uiMessages = toUIMessages(messages?.results ?? []);
   const isWaitingForAI =
-    form.formState.isSubmitting ||
-    (uiMessages.length > 0 && uiMessages.at(-1)?.role === "user");
+    conversation?.status !== "resolved" &&
+    conversation?.status !== "escalated" &&
+    (form.formState.isSubmitting ||
+      (uiMessages.length > 0 && uiMessages.at(-1)?.role === "user"));
 
 
   return (
