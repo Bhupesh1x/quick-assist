@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { generateText } from "ai";
-import { google } from "@ai-sdk/google";
+import { groq } from "@ai-sdk/groq";
 import { createTool } from "@convex-dev/agent";
 
 import { rag } from "../rag";
@@ -44,7 +44,7 @@ export const search = createTool({
       ?.join(", ")}. Here is the context:\n\n${searchResults?.text}`;
 
     const response = await generateText({
-      model: google.chat("gemini-2.5-flash"),
+      model: groq.chat("llama-3.3-70b-versatile"),
       messages: [
         {
           role: "system",

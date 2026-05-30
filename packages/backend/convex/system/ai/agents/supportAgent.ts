@@ -1,10 +1,10 @@
-import { google } from "@ai-sdk/google";
+import { groq } from "@ai-sdk/groq";
 import { Agent } from "@convex-dev/agent";
 
 import { components } from "../../../_generated/api";
 import { SUPPORT_AGENT_PROMPT } from "../../constants";
 
 export const supportAgent = new Agent(components.agent, {
-  chat: google.chat("gemini-2.5-flash"),
+  chat: groq.chat("llama-3.3-70b-versatile"),
   instructions: SUPPORT_AGENT_PROMPT,
 });

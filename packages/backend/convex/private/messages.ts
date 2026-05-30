@@ -1,5 +1,5 @@
 import { generateText } from "ai";
-import { google } from "@ai-sdk/google";
+import { groq } from "@ai-sdk/groq";
 import { ConvexError, v } from "convex/values";
 import { saveMessage } from "@convex-dev/agent";
 import { paginationOptsValidator } from "convex/server";
@@ -150,7 +150,7 @@ export const enhance = action({
     }
 
     const response = await generateText({
-      model: google("gemini-2.0-flash-lite"),
+      model: groq("llama-3.3-70b-versatile"),
       messages: [
         {
           role: "system",
