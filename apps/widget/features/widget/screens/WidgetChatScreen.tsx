@@ -133,6 +133,12 @@ export function WidgetChatScreen() {
     form.handleSubmit(onSubmit)();
   }
 
+  const uiMessages = toUIMessages(messages?.results ?? []);
+  const isWaitingForAI =
+    form.formState.isSubmitting ||
+    (uiMessages.length > 0 && uiMessages.at(-1)?.role === "user");
+
+
   return (
     <>
       <WidgetHeader className="w-full flex items-center justify-between px-2 py-4">
@@ -154,7 +160,7 @@ export function WidgetChatScreen() {
             onLoadMore={handleLoadMore}
             ref={topElementRef}
           />
-          {toUIMessages(messages?.results ?? [])?.map((message) => (
+          {uiMessages?.map((message) => (
             <AIMessage
               key={message?.id}
               from={message?.role === "user" ? "user" : "assistant"}
@@ -171,10 +177,22 @@ export function WidgetChatScreen() {
               ) : null}
             </AIMessage>
           ))}
+          {isWaitingForAI && (
+            <AIMessage from="assistant">
+              <AIMessageContent>
+                <div className="flex items-center gap-1">
+                  <span className="size-2 rounded-full bg-muted-foreground animate-bounce [animation-delay:0ms]" />
+                  <span className="size-2 rounded-full bg-muted-foreground animate-bounce [animation-delay:150ms]" />
+                  <span className="size-2 rounded-full bg-muted-foreground animate-bounce [animation-delay:300ms]" />
+                </div>
+              </AIMessageContent>
+              <DicebarAvatar imageUrl="/logo.svg" seed="assistant" size={32} />
+            </AIMessage>
+          )}
         </AIConversationContent>
       </AIConversation>
 
-      {toUIMessages(messages?.results ?? [])?.length === 1 && (
+      {uiMessages?.length === 1 && (
         <AISuggestions className="flex flex-col items-end w-full p-2">
           {suggestions?.map((suggestion) => {
             if (!suggestion) return null;
@@ -196,10 +214,10 @@ export function WidgetChatScreen() {
           <FormField
             control={form.control}
             name="message"
-            disabled={conversation?.status === "resolved"}
+            disabled={conversation?.status === "resolved" || isWaitingForAI}
             render={({ field }) => (
               <AIInputTextarea
-                disabled={conversation?.status === "resolved"}
+                disabled={conversation?.status === "resolved" || isWaitingForAI}
                 onChange={field.onChange}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
@@ -210,7 +228,9 @@ export function WidgetChatScreen() {
                 placeholder={
                   conversation?.status === "resolved"
                     ? "This conversation has been resolved"
-                    : "Type your message..."
+                    : isWaitingForAI
+                      ? "Waiting for response..."
+                      : "Type your message..."
                 }
                 value={field.value}
               />
@@ -223,7 +243,8 @@ export function WidgetChatScreen() {
               disabled={
                 conversation?.status === "resolved" ||
                 !form.formState.isValid ||
-                form?.formState?.isSubmitting
+                form?.formState?.isSubmitting ||
+                isWaitingForAI
               }
               status="ready"
             />
